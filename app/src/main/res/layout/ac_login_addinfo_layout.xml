@@ -88,14 +88,28 @@
 
 
         <TextView
-            android:text="Google email :"
+            android:text="GoogleID"
             android:textSize="25sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
             />
 
-        
+        <TextView
+            android:id="@+id/googleid"
+            android:text="구글아이디(필수)"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_google"
+            android:textSize="25sp"
+            android:text="구글ID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
 
     </LinearLayout>
 

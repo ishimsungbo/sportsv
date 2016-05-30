@@ -1,5 +1,7 @@
 package com.sportsv;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,22 +10,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.sportsv.R;
+import com.sportsv.common.Auth;
 import com.sportsv.common.Common;
 import com.sportsv.common.PreSaveInfo;
 import com.sportsv.dao.UserService;
 import com.sportsv.vo.User;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,11 +60,19 @@ public class LoginInfoActivity extends AppCompatActivity {
     @Bind(R.id.edit_email)
     EditText edit_email;
 
+    @Bind(R.id.btn_google)
+    Button btn_google;
+
     private int UID=0;
 
     private User sportvsUser;
     private PreSaveInfo prefUtil;
     private PreSaveInfo preSaveInfo;
+
+    //구글 아이디 선택하기
+    GoogleAccountCredential credential;
+    private static final int REQUEST_ACCOUNT_PICKER = 2;
+
 
     private static final String TAG = "LoginInfoActivity";
 
@@ -73,29 +88,43 @@ public class LoginInfoActivity extends AppCompatActivity {
         kakaoMe();
         sportvsUser = new User();
         preSaveInfo = new PreSaveInfo(this);
+
+        credential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(Auth.SCOPES));
+
+        credential.setBackOff(new ExponentialBackOff());
+
     }
 
     @OnClick(R.id.btn_join)
     public void btnJoin(){
 
-        Log.d(TAG, "유저 이메일 정보 : "+edit_email.getText().toString());
+        Log.d(TAG, "유저 이메일 정보 : " + edit_email.getText().toString());
         sportvsUser.setUseremail(edit_email.getText().toString());
+
+
+
 
         if(!checkEmail(edit_email.getText().toString())){
             Toast.makeText(getApplicationContext(),"이메일 형식이 맞지 않습니다 : "+edit_email.getText().toString(),Toast.LENGTH_SHORT).show();
             return;
         }else{
-            //서버에서 uid 생성하기
-            int serverUid = userCreate(sportvsUser);
-            Log.d(TAG, "계정이 생성되었습니다 : ");
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+            if(sportvsUser.getGoogleemail()!=null){
+                //서버에서 uid 생성하기
+                int serverUid = userCreate(sportvsUser);
+                Log.d(TAG, "계정이 생성되었습니다 : ");
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(),"구글 계정은 필수 입니다",Toast.LENGTH_SHORT).show();
+            }
+
         }
 
     }
 
     @OnClick(R.id.btn_cancel)
-    public void btnCancel(){
+    public void btnCancel() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
@@ -196,12 +225,11 @@ public class LoginInfoActivity extends AppCompatActivity {
                     Log.d(TAG, "서버에서 생성된 아이디는 : " + UID);
                     sportvsUser.setUid(UID);
                     preSaveInfo.saveUser(sportvsUser);
-
+                    dialog.dismiss();
                 }catch (Exception e){
                     Log.d(TAG, "서버와 통신중 오류 발생");
                     UID = 0;
                 }
-                dialog.dismiss();
             }
 
             @Override
@@ -223,6 +251,32 @@ public class LoginInfoActivity extends AppCompatActivity {
         Matcher m = p.matcher(email);
 
         return m.matches();
+    }
+
+    @OnClick(R.id.btn_google)
+    public void btn_google(){
+        Log.d(TAG, "구글 아이디 선택하기");
+        startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_ACCOUNT_PICKER:
+                if (resultCode == Activity.RESULT_OK && data != null
+                        && data.getExtras() != null) {
+                    String accountName = data.getExtras().getString(
+                            AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        credential.setSelectedAccountName(accountName);
+                        sportvsUser.setGoogleemail(accountName);
+                        Log.d(TAG,"선택한 아이디는 " +  sportvsUser.getGoogleemail());
+                    }
+                }
+                break;
+        }
     }
 
 }
