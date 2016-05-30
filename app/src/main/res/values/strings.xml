@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Sportsv</string>
+    <!--카카오번호-->
+    <string name="kakao_app_key">cd1f2e94c5539e0aae7d94cf734860c0</string>
+</resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/kakaologin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="카카오로그인"
+        android:textSize="25sp"
+        android:visibility="visible"
+        />
+
+    <Button
+        android:id="@+id/facebooklogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="페이스북로그인"
+        android:textSize="25sp"
+        android:visibility="visible"
+        />
+
+    <Button
+        android:id="@+id/connectout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        android:textSize="25sp"
+        android:visibility="invisible"
+        />
+
+    <Button
+        android:id="@+id/getusercheck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="구글 아이디 확인"
+        android:textSize="25sp"
+        />
+
+</LinearLayout>
