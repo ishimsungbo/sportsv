@@ -20,18 +20,33 @@
         android:theme="@style/AppTheme"
         android:name=".kakaosdk.GlobalApplication"
         >
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".LoginInfoActivity"/>
+
+        <activity android:name=".LoginActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".LoginInfoActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".UserInfoActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".JoinActivity" android:screenOrientation="portrait" />
+        <activity android:name=".AppLoginActivity" android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_id" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
+        <activity android:name=".common.SettingActivity" android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

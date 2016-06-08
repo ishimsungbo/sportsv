@@ -1,31 +1,30 @@
 package com.sportsv;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
-import com.sportsv.common.PreSaveInfo;
-import com.sportsv.vo.User;
 
+import com.sportsv.common.Compare;
+import com.sportsv.common.PrefUtil;
+import com.sportsv.vo.User;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private PreSaveInfo prefUtil;
-    public static Activity mainActivity;
 
     private User user;
+    private PrefUtil prefUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mainActivity=this;
 
         getSupportActionBar().setTitle("메인액티비티");
 
@@ -39,21 +38,84 @@ public class MainActivity extends AppCompatActivity {
         //apply ButterKnife
         ButterKnife.bind(this);
 
+        prefUtil = new PrefUtil(this);
 
-        prefUtil = new PreSaveInfo(mainActivity);
-        user = prefUtil.getUserProfile();
+        user = prefUtil.getUser();
 
-        Log.d(TAG, "유저명 : " + user.getUsername());
-        Log.d(TAG, "프리퍼런스 유저 이미지 경로 : " + user.getProfileimgurl());
-        Log.d(TAG,"프리퍼런스 uid : " + user.getUid());
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            Intent intent = getIntent();
+            String joinFlag = intent.getExtras().getString("join");
+            Log.d(TAG,"회원가입 후 메인으로 옴 " + joinFlag);
+
+        }else{
+            Log.d(TAG,"초기 앱을 실행");
+
+        }
+
+        Log.d(TAG, "onCreate ===========================================================");
 
     }
 
-    @OnClick(R.id.userjoin)
-    public void kakaologin(){
-        Intent login_intent = new Intent(getApplicationContext(),LoginActivity.class);
-        startActivity(login_intent);
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    @OnClick(R.id.btn_move)
+    public void btn_move(){
+
+        if(Compare.isEmpty(user.getUseremail())){
+
+            Log.d(TAG, "유저 정보가 없다");
+            Intent login_intent = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(login_intent);
+            overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+
+        }else{
+
+            Log.d(TAG,"유저 정보가 있다 : "+user.getUsername());
+            Intent login_intent = new Intent(this,UserInfoActivity.class);
+            startActivity(login_intent);
+            overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+
+        }
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart ===========================================================");
+        user = prefUtil.getUser();
+        Log.d(TAG,"onStart() : "+user.toString());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"OnPause ===========================================================");
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart ===========================================================");
+    }
+
+    //재개하다...
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume ===========================================================");
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Toast.makeText(getApplicationContext(),"앱을 종료합니다",Toast.LENGTH_SHORT).show();
+        android.os.Process.killProcess(android.os.Process.myPid());
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

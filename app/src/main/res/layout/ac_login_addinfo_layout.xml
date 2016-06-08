@@ -13,27 +13,6 @@
         android:scaleType="fitXY"
         />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-
-        <TextView
-            android:focusableInTouchMode="true"
-            android:text="전화번호 :"
-            android:textSize="25sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/tx_phone"
-            android:textSize="25sp"
-            android:hint="유저명"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -43,7 +22,7 @@
 
         <TextView
             android:focusableInTouchMode="true"
-            android:text="유저명 :"
+            android:text="SNS 등록 이름 :"
             android:textSize="25sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -72,12 +51,14 @@
             />
 
         <EditText
-
             android:id="@+id/edit_email"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:layout_width="250sp"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
+            android:maxLength="40"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
             />
     </LinearLayout>
 
@@ -97,7 +78,6 @@
 
         <TextView
             android:id="@+id/googleid"
-            android:text="구글아이디(필수)"
             android:textSize="25sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -108,9 +88,6 @@
             android:text="구글ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-
-
     </LinearLayout>
 
     <Button
@@ -126,5 +103,6 @@
         android:textSize="25sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 
 </LinearLayout>

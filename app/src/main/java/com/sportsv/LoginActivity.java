@@ -1,35 +1,44 @@
 package com.sportsv;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import android.widget.Button;
+
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 import com.sportsv.common.Common;
+import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserService;
-import com.sportsv.common.PreSaveInfo;
+import com.sportsv.serverservice.RetrofitService;
 import com.sportsv.vo.User;
+
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,32 +51,37 @@ import retrofit.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //회원가입추가 정보를 받아온다.
-    final static int USER_INFO_RESULT = 0;
-
-    private PreSaveInfo preSaveInfo;
-    private User users;
-
-    private SessionCallback kakaoCallback;
     private static final String TAG = "LoginActivity";
+    //회원가입추가 정보를 받아온다.
+    final static int FACEBOOK_RESULT=64206; //페이스북
+
+    private User SERVERUSER;
+    private PrefUtil prefUtil;
+
+    //kakao callback
+    private SessionCallback kakaoCallback;
+    //facebook calback
+    private CallbackManager callbackManager;
+
 
     @Bind(R.id.kakaologin)
     Button kakaologin;
 
-    @Bind(R.id.connectout)
-    Button connectout;
+    @Bind(R.id.facebooklogin)
+    Button facebooklogin;
 
-
-    //@Bind(R.id.iv_user_profile)
-    public static ImageView userImage;
-
-    private int existCount = 0;
+    //회원가입 상세로 넘길 변수들
+    private String username;
+    private String snsname;
+    private String snsid;
+    private String useremail;
+    private String snstype;
+    private String profileImgUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_login_layout);
-
 
         getSupportActionBar().setTitle("로그인액티비티");
 
@@ -80,20 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         //apply ButterKnife
         ButterKnife.bind(this);
 
-        preSaveInfo = new PreSaveInfo(this);
-
-        users = preSaveInfo.getUserProfile();
-
-        if(users.getUsername()!=null){
-            Log.d(TAG,"계정있음");
-            kakaologin.setVisibility(View.INVISIBLE);
-            connectout.setVisibility(View.VISIBLE);
-        }else if(users.getUsername()==null){
-            Log.d(TAG,"계정없음");
-            kakaologin.setVisibility(View.VISIBLE);
-            connectout.setVisibility(View.INVISIBLE);
-        }
-
+        prefUtil = new PrefUtil(this);
     }
 
     @Override
@@ -107,11 +108,25 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.kakaologin)
+    public void kakaologin(){
+
+        //카카오세션 오픈
+        kakaoCallback = new SessionCallback();
+        Session.getCurrentSession().addCallback(kakaoCallback);
+        if(!Session.getCurrentSession().checkAndImplicitOpen()){
+            Session.getCurrentSession().open(AuthType.KAKAO_TALK_EXCLUDE_NATIVE_LOGIN, LoginActivity.this);
+        }
+        Log.d(TAG, "카카오 로그인 시도");
+    }
+
     public class SessionCallback implements ISessionCallback {
+
+
         @Override
         public void onSessionOpened() {
-            getApplicationContext();
-            kakaoMe();
+            Log.d(TAG, "카카오 SessionCallback");
+            kakaoMeCallbackInfo();
         }
 
         @Override
@@ -119,59 +134,86 @@ public class LoginActivity extends AppCompatActivity {
             if(exception != null) {
                 Logger.e(exception);
             }
+            Log.d(TAG,"카카오 로그인 취소를 했습니다.");
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Session.getCurrentSession().removeCallback(kakaoCallback);
+    //페이스북 로그인 처리
+    @OnClick(R.id.facebooklogin)
+    public void facebooklogin(){
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                error.printStackTrace();
+            }
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Log.d(TAG, "---------------------onActivityResult---------------------");
+
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
-
-        Log.d(TAG, "다른 곳에서 다시 왔습니다 : " + requestCode);
-
-        super.onActivityResult(requestCode, resultCode, data);
-
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case USER_INFO_RESULT:
-                if(resultCode == RESULT_OK){
-                    Log.d(TAG, "회원가입 클릭 후 돌아왔습니다 : " + requestCode + " : " + RESULT_OK);
-                }else if(resultCode == RESULT_CANCELED){
-                    Log.d(TAG, "회원가입 취소 클릭 후 돌아왔습니다 : " + requestCode + " : " + RESULT_CANCELED);
-                }
+            case FACEBOOK_RESULT:
+                Log.d(TAG, "페이스북 로그인 처리 onActivityResult()");
+                facebookMeCallbackInfo();
                 break;
         }
+        super.onActivityResult(requestCode, resultCode, data);
 
     }
 
+    public void facebookMeCallbackInfo(){
 
-    @OnClick(R.id.kakaologin)
-    public void kakaologin(){
+        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
 
-        //카카오세션 오픈
-        kakaoCallback = new SessionCallback();
-        Session.getCurrentSession().addCallback(kakaoCallback);
-        Session.getCurrentSession().checkAndImplicitOpen();
-        Session.getCurrentSession().open(AuthType.KAKAO_TALK_EXCLUDE_NATIVE_LOGIN, LoginActivity.this);
+                try{
+                    Log.d(TAG, "페이스북 회원 정보가져오기");
 
-        //세션 및 상태 확인
-        //String s = Session.getCurrentSession().getAccessToken();
-        //Toast.makeText(getApplicationContext(), "카카오 토큰 : " + s, Toast.LENGTH_SHORT).show();
-        //if(Session.getCurrentSession().hasValidAccessToken()){
-        //    Toast.makeText(getApplicationContext(), "유효한 토큰", Toast.LENGTH_SHORT).show();
-        //}
+                    snstype ="facebook";
+                    username = object.getString("name");
+                    snsname  = object.getString("name");
+                    useremail = object.getString("email");
+                    snsid = object.getString("id");
+                    profileImgUrl = "https://graph.facebook.com/" + snsid + "/picture?type=large";
 
-        Log.d(TAG,"KAKAO 로그인을 버튼을 클릭하고 있습니다.");
+                    getUserInfo(snstype, snsid, "", "");
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,gender");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 
-    protected void kakaoMe() {
+    protected void kakaoMeCallbackInfo() {
         UserManagement.requestMe(new MeResponseCallback() {
             @Override
             public void onFailure(ErrorResult errorResult) {
@@ -193,12 +235,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UserProfile userProfile) {
 
+                Log.d(TAG, "카카오 회원 정보가져오기");
 
-                Intent intent = new Intent(getApplicationContext(), LoginInfoActivity.class);
-                startActivity(intent);
+                snstype = "kakao";
+                username = userProfile.getNickname();
+                snsname = userProfile.getNickname();
+                //useremail = 카카오는 정책상 메일을 제공하지 않는다
+                snsid = String.valueOf(userProfile.getId());
+                profileImgUrl = userProfile.getProfileImagePath();
 
-                overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-
+                getUserInfo(snstype, snsid,"","");
             }
 
             @Override
@@ -208,57 +254,103 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public static class RetrofitServiceImplFactory {
-        private static Retrofit getretrofit(){
-            return new Retrofit.Builder()
-                    .baseUrl(Common.SERVER_ADRESS)
-                    .addConverterFactory(GsonConverterFactory.create()).build();
-        }
-
-        public static UserService userService(){
-            return getretrofit().create(UserService.class);
-        }
-
-    }
-
-
-    public int userExist(String email){
+    public void getUserInfo(
+                            String type, //snstype
+                            String id,  //snsid
+                            String pw,  //password
+                            String email //useremail
+    ){
 
         final ProgressDialog dialog;
-
         dialog = ProgressDialog.show(this, "서버와 통신", "회원검증을 진행합니다", true);
         dialog.show();
 
-        final Call<Integer> userExist = RetrofitServiceImplFactory.userService().existUser(email);
-        userExist.enqueue(new Callback<Integer>() {
+        final Call<User> getUserInfo = RetrofitService.userService().getUser(type, id, pw, email);
 
+        getUserInfo.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Response<Integer> response, Retrofit retrofit) {
-                try{
-                    //uid 시퀀스가 디비에 생성됨
-                    existCount = response.body();
-                    Log.d(TAG, "서버에서 생성된 아이디는 : " + existCount);
+            public void onResponse(Response<User> response, Retrofit retrofit) {
 
-                }catch (Exception e){
-                    existCount = 2;
-                    Log.d(TAG, "서버와 통신중 오류 발생 :" +existCount);
+                if (response.isSuccess()) {
+                    Log.d(TAG, "서버 조회 결과 성공");
 
+                    SERVERUSER = response.body();
+
+                    if (SERVERUSER.getUseremail().equals("null@co.com")) {
+
+                        Log.d(TAG, "상세회원 가입 정보 페이지로 넘어 갑니다");
+
+                        Intent intent = new Intent(getApplicationContext(), LoginInfoActivity.class);
+
+                        intent.putExtra("snstype", snstype);
+                        intent.putExtra("username", username);
+                        intent.putExtra("snsname", snsname);
+                        intent.putExtra("useremail", useremail);
+                        intent.putExtra("snsid", snsid);
+                        intent.putExtra("profileImgUrl", profileImgUrl);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+
+                    } else {
+                        userExist();
+                    }
+
+                } else {
+                    Log.d(TAG, "조회 결과 실패");
                 }
+
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d(TAG,"환경 구성 확인 서버와 통신 불가");
+                Log.d(TAG, "환경 구성 확인 서버와 통신 불가" + t.getMessage());
+                t.printStackTrace();
                 dialog.dismiss();
-                existCount = 2;
             }
         });
 
-        return existCount;
     }
 
-    @OnClick(R.id.getusercheck)
+    public void userExist(){
+
+        prefUtil.saveUser(SERVERUSER);
+        Log.d("User Info", "************************************************");
+        Log.d("User Info", "SNS TYPE : " + SERVERUSER.getSnstype());
+        Log.d("User Info", "UID : " + SERVERUSER.getUid());
+        Log.d("User Info", "NAME : " + SERVERUSER.getUsername());
+        Log.d("User Info", "EMAIL : " + SERVERUSER.getUseremail());
+        Log.d("User Info", "GOOGLE ID : " + SERVERUSER.getGoogleemail());
+        Log.d("User Info", "************************************************");
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("join_y", "join_flag");
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+        finish();
+    }
+
+    @OnClick(R.id.btn_join)
+    public void btn_join(){
+        Log.d(TAG, "상세회원 가입 정보 페이지로 넘어 갑니다");
+
+        Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    @OnClick(R.id.btn_login)
+    public void btn_login(){
+        Log.d(TAG, "로그인 페이지로 이동");
+
+        Intent intent = new Intent(getApplicationContext(), AppLoginActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    /*
+        @OnClick(R.id.getusercheck)
     public void getusercheck(){
 
 
@@ -275,39 +367,37 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "Account - name: " + account.name + ", type :" + account.type);
             }
         }
+    }
+     */
 
-        Log.d(TAG,"1 : "+users.getUid());
-        Log.d(TAG,"2 : "+users.getUsername());
-        Log.d(TAG,"3 : "+users.getPhone());
-        Log.d(TAG,"4 : "+users.getUseremail());
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() ========================================");
     }
 
-    @OnClick(R.id.connectout)
-    public void connectout(){
-
-        Log.d(TAG,"로그아웃 호출" + users.getSnstype());
-        if(users.getSnstype().equals("kakao")){
-            Log.d(TAG,"카카오 로그 아웃을 합니다.");
-            onClickLogout();
-        }else if(users.getSnstype().equals("facebook")){
-            Log.d(TAG,"페이스북 로그 아웃을 합니다.");
-        }else if(users.getSnstype().equals("sportsv")){
-            Log.d(TAG,"SportsV 로그 아웃을 합니다.");
-        }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() ========================================");
     }
 
-    private void onClickLogout() {
-        UserManagement.requestLogout(new LogoutResponseCallback() {
-            @Override
-            public void onCompleteLogout() {
-                Log.d(TAG, "카카오 세션을 끈습니다");
-                preSaveInfo.clearStore();
-                Log.d(TAG, "메인페이지로 이동합니다");
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
-            }
-        });
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() ========================================");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() ========================================");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Session.getCurrentSession().removeCallback(kakaoCallback);
     }
 
 }

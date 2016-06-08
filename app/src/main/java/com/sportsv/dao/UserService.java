@@ -16,10 +16,20 @@ import retrofit.http.Query;
  */
 public interface UserService {
 
-    @POST("/api/usercreate")
+    @POST("/api/user/insert")
     Call<Integer> createUser(@Body User user);
 
-    @GET("/api/existuser")
-    Call<Integer> existUser(@Query("email") String email);
+    @GET("/api/user/existuser")
+    Call<User> getUser(
+            @Query("snstype") String snstype,
+            @Query("snsid") String snsid,
+            @Query("password") String password,
+            @Query("useremail") String useremail);
+
+    @GET("/api/user/userCheck")
+    Call<Integer> getUserCheck(
+            @Query("snstype") String snstype,
+            @Query("email") String email,
+            @Query("pw") String pw);
 
 }

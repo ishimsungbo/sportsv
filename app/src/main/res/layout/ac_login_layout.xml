@@ -8,8 +8,8 @@
         android:id="@+id/kakaologin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="카카오로그인"
-        android:textSize="25sp"
+        android:text="카카오"
+        android:textSize="20sp"
         android:visibility="visible"
         />
 
@@ -17,26 +17,34 @@
         android:id="@+id/facebooklogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="페이스북로그인"
-        android:textSize="25sp"
+        android:text="페이스북"
+        android:textSize="20sp"
         android:visibility="visible"
         />
 
-    <Button
-        android:id="@+id/connectout"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="로그아웃"
-        android:textSize="25sp"
-        android:visibility="invisible"
-        />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        >
 
-    <Button
-        android:id="@+id/getusercheck"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="구글 아이디 확인"
-        android:textSize="25sp"
-        />
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="로그인"
+            />
+        <Button
+            android:id="@+id/btn_join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="회원가입"
+            />
+
+
+    </LinearLayout>
 
 </LinearLayout>
