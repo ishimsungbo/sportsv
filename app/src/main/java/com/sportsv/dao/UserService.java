@@ -4,11 +4,8 @@ import com.sportsv.vo.User;
 
 import retrofit.Call;
 import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**

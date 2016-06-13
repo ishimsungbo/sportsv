@@ -3,16 +3,12 @@ package com.sportsv;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,7 +36,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
@@ -210,6 +205,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.d(TAG, "서버와 통신중 오류 발생");
                     UID = 0;
+                    dialog.dismiss();
                 }
             }
 

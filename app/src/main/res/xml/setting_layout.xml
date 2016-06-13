@@ -1,77 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:key="setting"
-        android:title="설정">
-        <PreferenceCategory
-            android:key="keycateappversion"
-            android:title="앱버전" >
-            <Preference
-                android:key="keyappversion"
-                android:title="1.0.0" />
-        </PreferenceCategory>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="setting"
+    android:title="설정">
+
+    <PreferenceCategory
+        android:key="keysetupload"
+        android:title="앱 설정" >
 
         <Preference
-            android:key="keyagree"
-            android:title="약관 및 취급방침" />
+            android:title="영상업로드 설정">
+                 <intent android:targetClass="com.sportsv.common.SettingVideoUploadActivity"
+            android:targetPackage="com.sportsv" />
+        </Preference>
 
-        <PreferenceCategory
-            android:key="keycatehelp"
-            android:title="헬프데스크" >
+    </PreferenceCategory>
 
-            <Preference
-                android:key="keyhelp"
-                android:title="도움말" />
-            <Preference
-                android:key="keycontact"
-                android:title="고객센터" />
+    <PreferenceCategory
+        android:key="keycateappversion"
+        android:title="앱버전" >
+        <Preference
+            android:key="keyappversion"
+            android:title="1.0.0" />
+    </PreferenceCategory>
 
-            <Preference
-                android:summary="개발팀에게 메일을 보냅니다"
-                android:title="메일 보내기" >
-                <intent
-                    android:action="android.intent.action.SENDTO"
-                    android:data="mailto:soccerveteran@naver.com"
-                    />
-            </Preference>
+    <Preference
+        android:key="keyagree"
+        android:title="약관 및 취급방침" />
 
-            <Preference
-                android:key="keyevaluation"
-                android:title="앱 평가하기" >
-                <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="market://details?id=com.app.soccerveteranv"
-                    />
-            </Preference>
+    <PreferenceCategory
+        android:key="keycatehelp"
+        android:title="헬프데스크" >
 
-        </PreferenceCategory>
+        <Preference
+            android:key="keyhelp"
+            android:title="도움말" />
+        <Preference
+            android:key="keycontact"
+            android:title="고객센터" />
+
+        <Preference
+            android:summary="개발팀에게 메일을 보냅니다"
+            android:title="메일 보내기" >
+            <intent
+                android:action="android.intent.action.SENDTO"
+                android:data="mailto:soccerveteran@naver.com"
+                />
+        </Preference>
+
+        <Preference
+            android:key="keyevaluation"
+            android:title="앱 평가하기" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=com.app.soccerveteranv"
+                />
+        </Preference>
+
+    </PreferenceCategory>
 
 
-        <PreferenceCategory android:title="자동 업데이트" >
+    <PreferenceCategory android:title="자동 업데이트" >
 
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="autoUpdate"
-                android:summary="자동 업데이트를 설정합니다"
-                android:switchTextOff="OFF"
-                android:switchTextOn="ON"
-                android:title="자동 업데이트" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="autoUpdate"
+            android:summary="자동 업데이트를 설정합니다"
+            android:switchTextOff="OFF"
+            android:switchTextOn="ON"
+            android:title="자동 업데이트" />
 
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:dependency="autoUpdate"
-                android:key="useUpdateNofiti"
-                android:summary="업데이트후 알림을 띄웁니다"
-                android:title="알림 사용" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="autoUpdate"
+            android:key="useUpdateNofiti"
+            android:summary="업데이트후 알림을 띄웁니다"
+            android:title="알림 사용" />
 
-            <RingtonePreference
-                android:defaultValue="content://settings/system/notification_sound"
-                android:dependency="useUpdateNofiti"
-                android:key="autoUpdate_ringtone"
-                android:ringtoneType="notification"
-                android:showSilent="true"
-                android:title="알림 소리" />
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="useUpdateNofiti"
+            android:key="autoUpdate_ringtone"
+            android:ringtoneType="notification"
+            android:showSilent="true"
+            android:title="알림 소리" />
 
-        </PreferenceCategory>
+    </PreferenceCategory>
 
-    </PreferenceScreen>
+<!--
+    <PreferenceCategory android:title="이름 관련 설정 예제">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="useUserName"
+            android:summaryOff="사용자의 이름을 사용하지 않습니다"
+            android:summaryOn="사용자의 이름을 사용합니다"
+            android:title="사용자 이름 사용" />
+
+        <EditTextPreference
+            android:defaultValue="Mir"
+            android:dependency="useUserName"
+            android:key="userName"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="사용자 이름 설정" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dependency="useUserName"
+            android:entries="@array/userNameOpen"
+            android:entryValues="@array/userNameOpen_values"
+            android:key="userNameOpen"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="이름 공개 범위" />
+    </PreferenceCategory>
+    -->
+
+
+</PreferenceScreen>

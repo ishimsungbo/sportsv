@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="video_upload_setting"
+    android:title="동영상 업로드 설정"
+    >
+
+    <PreferenceCategory
+        android:key="keyvideo_upload"
+        android:title="동영상 업로드 설정"
+        >
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="complex_upload"
+            android:summary="모바일 데이터 및 WiFi 연결시 업로드 허용"
+            android:switchTextOff="OFF"
+            android:switchTextOn="ON"
+            />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="wifi_upload"
+            android:summary="WiFi 연결 시에만"
+            android:switchTextOff="OFF"
+            android:switchTextOn="ON"
+            android:background="#ff0"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

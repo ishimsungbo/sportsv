@@ -6,10 +6,13 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
 
 
     <application
@@ -46,6 +49,13 @@
         </activity>
 
         <activity android:name=".common.SettingActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".test.TestActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".common.SettingVideoUploadActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".youtubeupload.StartUploadActivity" android:screenOrientation="portrait"/>
+
+
+        <service android:name=".youtubeupload.UploadService" android:exported="true"/>
+
 
     </application>
 

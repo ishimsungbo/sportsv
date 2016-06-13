@@ -1,16 +1,17 @@
 package com.sportsv;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
+import com.sportsv.test.TestActivity;
 import com.sportsv.vo.User;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -50,11 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             Log.d(TAG,"초기 앱을 실행");
-
         }
 
         Log.d(TAG, "onCreate ===========================================================");
-
     }
 
     @OnClick(R.id.btn_move)
@@ -118,4 +117,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
+    //기타테스트화면
+    @OnClick(R.id.btn_module_test)
+    public void btn_module_test(){
+
+        Intent intent = new Intent(this,TestActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
 }

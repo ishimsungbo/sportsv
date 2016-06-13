@@ -2,20 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/btn_move"
-        android:text="로그인 모듈/기타설정"
-        android:textSize="20sp"
+        android:id="@+id/btn_getvideo"
+        android:onClick="mOnClick"
+        android:text="유투브 비디오 목록가져오기"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btn_module_test"
-        android:text="기타테스트화면"
-        android:textSize="20sp"
+        android:id="@+id/btn_upload"
+        android:onClick="mOnClick"
+        android:text="업로드하기"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
@@ -221,6 +220,7 @@ public class JoinActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.d(TAG, "서버와 통신중 오류 발생");
                     UID = 0;
+                    dialog.dismiss();
                 }
             }
 

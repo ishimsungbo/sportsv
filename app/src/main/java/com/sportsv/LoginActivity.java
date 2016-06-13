@@ -2,15 +2,11 @@ package com.sportsv;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-
 import android.widget.Button;
-
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -30,9 +26,7 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
-import com.sportsv.common.Common;
 import com.sportsv.common.PrefUtil;
-import com.sportsv.dao.UserService;
 import com.sportsv.serverservice.RetrofitService;
 import com.sportsv.vo.User;
 
@@ -45,7 +39,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 

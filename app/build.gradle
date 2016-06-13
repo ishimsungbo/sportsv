@@ -6,11 +6,12 @@ android {
 
     defaultConfig {
         applicationId "com.sportsv"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -43,6 +44,11 @@ android {
 
 }
 
+configurations {
+    compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
+    compile.exclude group: 'commons-logging', module: 'commons-logging'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -60,17 +66,19 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
-    //google and youtube
-    compile files('libs/google-api-client-1.22.0.jar')
-    compile files('libs/google-api-client-android-1.22.0.jar')
-    compile files('libs/google-api-client-gson-1.22.0.jar')
-    compile files('libs/google-api-services-youtube-v3-rev172-1.22.0.jar')
-    compile files('libs/google-http-client-1.22.0.jar')
-    compile files('libs/google-http-client-android-1.22.0.jar')
-    compile files('libs/google-http-client-gson-1.22.0.jar')
-    compile files('libs/google-http-client-jackson2-1.22.0.jar')
-    compile files('libs/YouTubeAndroidPlayerApi.jar')
-    compile 'com.google.android.gms:play-services-plus:8.4.0'
     //facebook
     compile 'com.facebook.android:facebook-android-sdk:4.8.2'
+    compile files('libs/spring-android-rest-template-1.0.1.RELEASE.jar')
+    compile 'org.springframework:spring-core:4.2.6.RELEASE'
+    //google and youtube
+    compile 'com.google.android.gms:play-services-plus:+'
+    //compile 'com.google.apis:google-api-services-youtube:v3-rev120-1.19.0'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+
+// http://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube
+    compile group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev175-1.22.0'
+    compile 'com.google.http-client:google-http-client-android:+'
+    compile 'com.google.api-client:google-api-client-android:+'
+    compile 'com.google.api-client:google-api-client-gson:+'
+    compile 'com.google.code.gson:gson:2.2.4'
 }

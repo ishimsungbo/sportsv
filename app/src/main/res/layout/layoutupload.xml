@@ -2,22 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_move"
-        android:text="로그인 모듈/기타설정"
-        android:textSize="20sp"
+    <TextView
+        android:id="@+id/tx_filename"
+        android:textSize="30sp"
+        android:text="업로드 비디오 파일이름"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btn_module_test"
-        android:text="기타테스트화면"
-        android:textSize="20sp"
+        android:id="@+id/upload"
+        android:text="업로드"
+        android:onClick="reOnClick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 
 </LinearLayout>

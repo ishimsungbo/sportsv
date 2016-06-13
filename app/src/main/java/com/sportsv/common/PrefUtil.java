@@ -3,7 +3,6 @@ package com.sportsv.common;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.sportsv.vo.User;
 

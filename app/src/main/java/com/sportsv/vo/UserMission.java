@@ -13,11 +13,12 @@ public class UserMission {
 	private String youtubeaddr;
 	private String passflag;
 	private String videoaddr;
+	private String filename;
 	private Date creationdate;
 
 	public UserMission(){}
 
-	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, Date creationdate) {
+	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, String filename, Date creationdate) {
 		this.usermissionid = usermissionid;
 		this.missionid = missionid;
 		this.uid = uid;
@@ -27,6 +28,7 @@ public class UserMission {
 		this.youtubeaddr = youtubeaddr;
 		this.passflag = passflag;
 		this.videoaddr = videoaddr;
+		this.filename = filename;
 		this.creationdate = creationdate;
 	}
 
@@ -108,5 +110,13 @@ public class UserMission {
 
 	public void setCreationdate(Date creationdate) {
 		this.creationdate = creationdate;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 }

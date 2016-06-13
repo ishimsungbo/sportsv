@@ -4,6 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <ImageView
+            android:id="@+id/user_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:onClick="imageOnClick"
+            android:src="@drawable/userimage"
+            android:layout_gravity="center"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            />
+    </LinearLayout>
+
     <Button
         android:id="@+id/logout"
         android:layout_width="match_parent"
@@ -20,5 +40,55 @@
         android:text="기타설정"
         android:textSize="20sp"
         />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="셀프 포인트 : "
+                    android:textSize="20sp"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tx_selfpoint_amount"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="현금 포인트 : "
+                    android:textSize="20sp"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tx_cash_point_amount"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
