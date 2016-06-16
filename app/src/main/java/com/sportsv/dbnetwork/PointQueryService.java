@@ -102,9 +102,10 @@ public class PointQueryService {
             public void onResponse(Response<CpBalanceHeader> response, Retrofit retrofit) {
                 try {
 
-                    Log.d(TAG, "서버에서 셀프 포인트 정보를 가져옵니다");
+                    Log.d(TAG, "서버에서 캐쉬 포인트 정보를 가져옵니다");
 
                     cpBalanceHeader = response.body();
+
 
                     String self_point = String.valueOf(cpBalanceHeader.getAmount());
 

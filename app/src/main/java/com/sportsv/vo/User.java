@@ -17,6 +17,7 @@ public class User {
 	private int location;
 	private String apppushflag;
 	private String teampushflag;
+	private int teamid;
 	private Date creationdate;
 
 
@@ -27,7 +28,7 @@ public class User {
 		this.useremail = useremail;
 	}
 
-	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, Date creationdate) {
+	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, Date creationdate) {
 		this.uid = uid;
 		this.useremail = useremail;
 		this.username = username;
@@ -41,6 +42,7 @@ public class User {
 		this.location = location;
 		this.apppushflag = apppushflag;
 		this.teampushflag = teampushflag;
+		this.teamid = teamid;
 		this.creationdate = creationdate;
 	}
 
@@ -132,14 +134,6 @@ public class User {
 		this.location = location;
 	}
 
-	public Date getCreationdate() {
-		return creationdate;
-	}
-
-	public void setCreationdate(Date creationdate) {
-		this.creationdate = creationdate;
-	}
-
 	public String getApppushflag() {
 		return apppushflag;
 	}
@@ -154,6 +148,22 @@ public class User {
 
 	public void setTeampushflag(String teampushflag) {
 		this.teampushflag = teampushflag;
+	}
+
+	public int getTeamid() {
+		return teamid;
+	}
+
+	public void setTeamid(int teamid) {
+		this.teamid = teamid;
+	}
+
+	public Date getCreationdate() {
+		return creationdate;
+	}
+
+	public void setCreationdate(Date creationdate) {
+		this.creationdate = creationdate;
 	}
 
 	@Override
@@ -172,6 +182,7 @@ public class User {
 				", location=" + location +
 				", apppushflag='" + apppushflag + '\'' +
 				", teampushflag='" + teampushflag + '\'' +
+				", teamid=" + teamid +
 				", creationdate=" + creationdate +
 				'}';
 	}

@@ -28,19 +28,25 @@ import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.common.SettingActivity;
 import com.sportsv.dbnetwork.PointQueryService;
+import com.sportsv.dbnetwork.UserMissionTRService;
+import com.sportsv.dbnetwork.UserTRService;
 import com.sportsv.serverservice.FileUploadService;
+import com.sportsv.serverservice.RetrofitService;
 import com.sportsv.vo.CpBalanceHeader;
 import com.sportsv.vo.SpBalanceHeader;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+
 
 /**
  * Created by sungbo on 2016-06-03.
@@ -100,14 +106,6 @@ public class UserInfoActivity extends AppCompatActivity{
 
         Log.d(TAG," 유저 값은 : " + user.toString());
 
-        spBalanceHeader = new SpBalanceHeader();
-
-        PointQueryService queryServiceSelf = new PointQueryService(TAG,this,spBalanceHeader,tx_selfpoint_amount,user.getUid());
-        PointQueryService queryServiceCash = new PointQueryService(TAG,this,cpBalanceHeader,tx_cash_point_amount,user.getUid());
-
-        queryServiceSelf.getSelfPoint();
-        queryServiceCash.getCashPoint();
-
     }
 
 
@@ -161,9 +159,27 @@ public class UserInfoActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() start ===========================================================");
+
+        spBalanceHeader = new SpBalanceHeader();
+        cpBalanceHeader = new CpBalanceHeader();
+
+        PointQueryService queryServiceSelf = new PointQueryService(TAG,this,spBalanceHeader,tx_selfpoint_amount,user.getUid());
+        PointQueryService queryServiceCash = new PointQueryService(TAG,this,cpBalanceHeader,tx_cash_point_amount,user.getUid());
+
+        queryServiceSelf.getSelfPoint();
+        queryServiceCash.getCashPoint();
+        Log.d(TAG, "onStart() log 포인트 정보를 가져옵니다");
+        Log.d(TAG, "onStart() last ===========================================================");
+
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState ===========================================================");
+        Log.d(TAG, "onSaveInstanceState() ===========================================================");
     }
 
     @Override
@@ -333,7 +349,9 @@ public class UserInfoActivity extends AppCompatActivity{
         //유저 아이디
         //확장자를 포함한 파일명
         //확장자를 포함한 파일의 위치+파일명
+
         new FileUploadService(StrUid,fileName,RealFilePath).execute();
+
 
         //유저사진을 쉐어퍼런스에 저장해준다(업데이트)
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -361,5 +379,18 @@ public class UserInfoActivity extends AppCompatActivity{
     }
 
 
+    @OnClick(R.id.btn_daily_check)
+    public void btn_daily_check(){
+
+        UserTRService trService = new UserTRService(this);
+        trService.daliyCheck(
+                user.getUid(),    //유저아아디
+                "DALIY",            // 포인트타입
+                "KR"              // 국가코드
+                ,tx_selfpoint_amount
+        );
+
+
+    }
 
 }

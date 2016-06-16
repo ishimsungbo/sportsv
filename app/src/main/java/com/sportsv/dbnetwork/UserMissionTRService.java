@@ -1,11 +1,13 @@
 package com.sportsv.dbnetwork;
 
-import android.app.ProgressDialog;
-import android.content.Context;
+
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.sportsv.serverservice.RetrofitService;
 import com.sportsv.vo.UserMission;
+import com.sportsv.widget.VeteranToast;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -17,10 +19,26 @@ import retrofit.Retrofit;
  */
 public class UserMissionTRService {
 
-    private String TAG;
+    private String TAG = "UserMissionTRService";
+    private AppCompatActivity activity;
     private int usermissionid = 0 ;
-    //유저미션을 생성할때 사용하는 생성자
 
+    private String resultCode="";
+
+    public String getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(String resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    //유저미션을 생성할때 사용하는 생성자
+    public UserMissionTRService(){}
+
+    public UserMissionTRService(AppCompatActivity activity) {
+        this.activity = activity;
+    }
 
     public void createUserMission(UserMission userMission){
 
@@ -40,6 +58,37 @@ public class UserMissionTRService {
                 usermissionid = -1;
             }
         });
-
     }
+
+    //유저가 동영상 업로드 후, 다시 찍었을 경우 업데이트 메서드를 이용한다
+    public void updateUserMisssion(int userMissionId,
+                                   int uId,
+                                   String youTubeaddr){
+
+        final Call<String> updateUserMission = RetrofitService.userMissionService().updateUserMission(userMissionId,uId,youTubeaddr);
+
+        updateUserMission.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Response<String> response, Retrofit retrofit) {
+
+                resultCode = response.body();
+
+                Log.d(TAG,"결과 값은 : "+resultCode);
+
+                if(resultCode.equals("update")){
+                    VeteranToast.makeToast(activity,"유저미션이 업데이트 되었습니다",Toast.LENGTH_LONG).show();
+                }else{
+                    VeteranToast.makeToast(activity,"유저미션 업데이트 도중 에러가 발생했습니다. 관리자에게 문의해주세요",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d(TAG,"Error : " + t.getMessage());
+                t.printStackTrace();
+            }
+        });
+    }
+
+
 }

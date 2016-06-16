@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <LinearLayout style="@style/box_wrap"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,16 +41,24 @@
         android:textSize="20sp"
         />
 
+    <Button
+        android:id="@+id/btn_daily_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="출석체크"
+        android:textSize="20sp"
+        />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <LinearLayout style="@style/box_wrap"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <LinearLayout style="@style/box_wrap"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -69,7 +77,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <LinearLayout style="@style/box_wrap"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -89,6 +97,10 @@
             </LinearLayout>
         </LinearLayout>
 
+
     </ScrollView>
+
+
+
 
 </LinearLayout>

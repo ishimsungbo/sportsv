@@ -91,9 +91,6 @@ public class UploadService extends IntentService {
         Log.d(TAG, "서비스 이벤트 onHandleIntent 아이디는 : " + chosenAccountName);
 
 
-
-
-
         //credential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Lists.newArrayList(Auth.SCOPES));
         credential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Lists.newArrayList(Auth.SCOPES));
         credential = GoogleAccountCredential.usingOAuth2(getApplicationContext(),YouTubeScopes.all());

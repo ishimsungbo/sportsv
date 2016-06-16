@@ -7,46 +7,27 @@ import java.util.Date;
  */
 public class Instructor {
 
-    private int idinstructorid;
+    private int instructorid;
     private String email;
     private String name;
     private String profile;
     private String description;
     private String phone;
     private int location;
-    private String teamflag;
-    private String teamname;
+    private int teamid;
+    private int pointhistoryid;
     private String feedbackflag;
-    private String lectureflag;
-    private String teamjoinflag;
     private String apppushflag;
     private Date creationdate;
 
     public Instructor(){}
 
-    public Instructor(int idinstructorid, String email, String name, String profile, String description, String phone, int location, String teamflag, String teamname, String feedbackflag, String lectureflag, String teamjoinflag, String apppushflag, Date creationdate) {
-        this.idinstructorid = idinstructorid;
-        this.email = email;
-        this.name = name;
-        this.profile = profile;
-        this.description = description;
-        this.phone = phone;
-        this.location = location;
-        this.teamflag = teamflag;
-        this.teamname = teamname;
-        this.feedbackflag = feedbackflag;
-        this.lectureflag = lectureflag;
-        this.teamjoinflag = teamjoinflag;
-        this.apppushflag = apppushflag;
-        this.creationdate = creationdate;
+    public int getInstructorid() {
+        return instructorid;
     }
 
-    public int getIdinstructorid() {
-        return idinstructorid;
-    }
-
-    public void setIdinstructorid(int idinstructorid) {
-        this.idinstructorid = idinstructorid;
+    public void setInstructorid(int instructorid) {
+        this.instructorid = instructorid;
     }
 
     public String getEmail() {
@@ -65,6 +46,22 @@ public class Instructor {
         this.name = name;
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -81,20 +78,20 @@ public class Instructor {
         this.location = location;
     }
 
-    public String getTeamflag() {
-        return teamflag;
+    public int getTeamid() {
+        return teamid;
     }
 
-    public void setTeamflag(String teamflag) {
-        this.teamflag = teamflag;
+    public void setTeamid(int teamid) {
+        this.teamid = teamid;
     }
 
-    public String getTeamname() {
-        return teamname;
+    public int getPointhistoryid() {
+        return pointhistoryid;
     }
 
-    public void setTeamname(String teamname) {
-        this.teamname = teamname;
+    public void setPointhistoryid(int pointhistoryid) {
+        this.pointhistoryid = pointhistoryid;
     }
 
     public String getFeedbackflag() {
@@ -103,22 +100,6 @@ public class Instructor {
 
     public void setFeedbackflag(String feedbackflag) {
         this.feedbackflag = feedbackflag;
-    }
-
-    public String getLectureflag() {
-        return lectureflag;
-    }
-
-    public void setLectureflag(String lectureflag) {
-        this.lectureflag = lectureflag;
-    }
-
-    public String getTeamjoinflag() {
-        return teamjoinflag;
-    }
-
-    public void setTeamjoinflag(String teamjoinflag) {
-        this.teamjoinflag = teamjoinflag;
     }
 
     public String getApppushflag() {
@@ -137,19 +118,19 @@ public class Instructor {
         this.creationdate = creationdate;
     }
 
-    public String getProfile() {
-        return profile;
-    }
+    public Instructor(int instructorid, String email, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, Date creationdate) {
 
-    public void setProfile(String profile) {
+        this.instructorid = instructorid;
+        this.email = email;
+        this.name = name;
         this.profile = profile;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
+        this.phone = phone;
+        this.location = location;
+        this.teamid = teamid;
+        this.pointhistoryid = pointhistoryid;
+        this.feedbackflag = feedbackflag;
+        this.apppushflag = apppushflag;
+        this.creationdate = creationdate;
     }
 }

@@ -8,4 +8,34 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="box_wrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">6dip</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <!-- 스타일 지정하기
+
+    <style name="box_top">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dip</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:padding">6dip</item>
+        <item name="android:background">@drawable/bg_box_top</item>
+    </style>
+
+    <style name="box_bottom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">16dip</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:padding">6dip</item>
+        <item name="android:background">@drawable/bg_box_bottom</item>
+    </style>
+-->
+
+
 </resources>

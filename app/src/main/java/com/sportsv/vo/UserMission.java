@@ -1,5 +1,6 @@
 package com.sportsv.vo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UserMission {
@@ -15,10 +16,11 @@ public class UserMission {
 	private String videoaddr;
 	private String filename;
 	private Date creationdate;
+	private String change_creationdate;
 
 	public UserMission(){}
 
-	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, String filename, Date creationdate) {
+	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, String filename, Date creationdate, String change_creationdate) {
 		this.usermissionid = usermissionid;
 		this.missionid = missionid;
 		this.uid = uid;
@@ -30,6 +32,15 @@ public class UserMission {
 		this.videoaddr = videoaddr;
 		this.filename = filename;
 		this.creationdate = creationdate;
+		this.change_creationdate = change_creationdate;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 	public int getUsermissionid() {
@@ -112,11 +123,13 @@ public class UserMission {
 		this.creationdate = creationdate;
 	}
 
-	public String getFilename() {
-		return filename;
+	public String getChange_creationdate() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
+		change_creationdate = dateFormat.format(creationdate);
+		return change_creationdate;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setChange_creationdate(String change_creationdate) {
+		this.change_creationdate = change_creationdate;
 	}
 }

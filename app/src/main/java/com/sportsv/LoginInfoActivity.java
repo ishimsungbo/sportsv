@@ -155,6 +155,7 @@ public class LoginInfoActivity extends AppCompatActivity {
         //userVo.setPhone(phoneNum);
         userVo.setTeampushflag("Y");
         userVo.setApppushflag("Y");
+        userVo.setTeamid(0);
 
     }
 

@@ -72,7 +72,6 @@ dependencies {
     compile 'org.springframework:spring-core:4.2.6.RELEASE'
     //google and youtube
     compile 'com.google.android.gms:play-services-plus:+'
-    //compile 'com.google.apis:google-api-services-youtube:v3-rev120-1.19.0'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 
 // http://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube
@@ -81,4 +80,5 @@ dependencies {
     compile 'com.google.api-client:google-api-client-android:+'
     compile 'com.google.api-client:google-api-client-gson:+'
     compile 'com.google.code.gson:gson:2.2.4'
+
 }

@@ -4,30 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnstart"
-        android:text="시작"
-        android:textSize="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnend"
-        android:text="종료"
-        android:textSize="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btngent"
         android:text="통신사/wifi 연결 check"
-        android:textSize="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnTesti"
-        android:text="메서드 테스트"
         android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -39,12 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-
     <Button
-        android:id="@+id/btn_umission"
-        android:text="유저미션생성"
+        android:id="@+id/btnupdate"
+        android:text="유저미션업데이트"
         android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+
 
 </LinearLayout>

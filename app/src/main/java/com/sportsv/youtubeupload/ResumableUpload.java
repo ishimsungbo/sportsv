@@ -122,7 +122,7 @@ public class ResumableUpload {
                                 break;
                             case MEDIA_IN_PROGRESS:
                                 Log.d(TAG,"MEDIA_IN_PROGRESS 1 ========================" + uploader.getProgress() * 100 + "%");
-                                Log.d(TAG,"MEDIA_IN_PROGRESS 2 ========================" + uploader.getNumBytesUploaded() + "%");
+
                                 break;
                             case MEDIA_COMPLETE:
                                 Log.d(TAG,"MEDIA_COMPLETE ========================");

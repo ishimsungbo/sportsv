@@ -4,16 +4,27 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.sportsv.common.Common;
+import com.squareup.okhttp.Authenticator;
+import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpAuthentication;
+import org.springframework.http.HttpBasicAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.Proxy;
 
 /**
  * Created by sungbo on 2016-06-09.
@@ -59,22 +70,19 @@ public class FileUploadService extends AsyncTask<Void,Void,String>{
         Log.d(TAG, "업로드를 시작합니다");
 
         try {
-            // The URL for making the POST request
-            final String url = Common.SERVER_ADRESS + "/api/user/fileupload";
+
+            final String url = Common.SERVER_ADRESS + "/spring/user/img/fileupload";
 
             HttpHeaders requestHeaders = new HttpHeaders();
 
-            // Sending multipart/form-data
             requestHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-            // Populate the MultiValueMap being serialized and headers in an HttpEntity object to use for the request
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(
                     formData, requestHeaders);
 
-            // Create a new RestTemplate instance
             RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
-            // Make the network request, posting the message, expecting a String in response from the server
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
             // Return the response body to display to the user

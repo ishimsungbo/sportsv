@@ -5,24 +5,42 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.sportsv.R;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserMissionService;
 import com.sportsv.dbnetwork.UserMissionTRService;
+import com.sportsv.serverservice.RetrofitService;
 import com.sportsv.vo.User;
 import com.sportsv.vo.UserMission;
 import com.sportsv.youtubeupload.StartUploadActivity;
 
+import org.springframework.http.HttpAuthentication;
+import org.springframework.http.HttpBasicAuthentication;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 import retrofit.http.Body;
 
 /**
@@ -39,7 +57,7 @@ public class TestActivity extends AppCompatActivity {
 
     //기타설정
     private SharedPreferences mPref;
-    Button btnstart,btnend,btngent;
+    Button btngent;
 
     //사용자정보
     PrefUtil prefUtil;
@@ -92,23 +110,6 @@ public class TestActivity extends AppCompatActivity {
         }
         */
 
-        //기타 테스트
-        btnstart = (Button) findViewById(R.id.btnstart);
-        btnend  = (Button) findViewById(R.id.btnend);
-
-        btnstart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //setProgressBarIndeterminateVisibility(true);
-            }
-        });
-
-        btnend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //setProgressBarIndeterminateVisibility(false);
-            }
-        });
 
         //와이파이 연결 설정 여부 확인
         cManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -134,11 +135,6 @@ public class TestActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
-
-
  }
 
     @Override
@@ -198,22 +194,14 @@ public class TestActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.btn_umission)
-    public void btn_umission(){
+    @OnClick(R.id.btnupdate)
+    public void btnupdate(){
 
-        UserMission userMission = new UserMission();
+        UserMissionTRService service = new UserMissionTRService(this);
+        service.updateUserMisssion(9,174,"dajisdpodmkl");
 
-        userMission.setMissionid(1);
-        userMission.setUid(user.getUid());
-        userMission.setSubject("테스트 생성 미션 입니다");
-        userMission.setUploadflag("N");
-        userMission.setPassflag("N");
-        userMission.setYoutubeaddr("dddddddd");
-        userMission.setFilename("아아아");
-
-        UserMissionTRService trService = new UserMissionTRService();
-        trService.createUserMission(userMission);
     }
+
 
 
 }

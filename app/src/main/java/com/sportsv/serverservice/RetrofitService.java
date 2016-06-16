@@ -7,6 +7,14 @@ import com.sportsv.common.Common;
 import com.sportsv.dao.PointService;
 import com.sportsv.dao.UserMissionService;
 import com.sportsv.dao.UserService;
+import com.squareup.okhttp.Authenticator;
+import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
+import java.net.Proxy;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
@@ -24,7 +32,25 @@ public class RetrofitService {
 
         Log.d(TAG, "RetrofitService.getRetrofit() excuting");
 
-        return new Retrofit.Builder()
+        OkHttpClient httpClient = new OkHttpClient();
+
+
+        httpClient.setAuthenticator(new Authenticator() {
+            @Override
+            public Request authenticate(Proxy proxy, Response response) throws IOException {
+
+                //비번설정
+                String credential = Credentials.basic("SportsVeteranUser","sksmsRhrtjdrhdgkrhakfxpek");
+                return response.request().newBuilder().header("Authorization", credential).build();
+            }
+
+            @Override
+            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
+                return null;
+            }
+        });
+
+        return new Retrofit.Builder().client(httpClient)
                 .baseUrl(Common.SERVER_ADRESS)
                 .addConverterFactory(
                         GsonConverterFactory.create()
@@ -45,6 +71,7 @@ public class RetrofitService {
         Log.d(TAG,"RetrofitService.userMissionService() excuting");
         return getRetrofit().create(UserMissionService.class);
     }
+
 
 
 }

@@ -37,6 +37,7 @@ public class PrefUtil {
         pre.putString("snstype", user.getSnstype());
         pre.putString("snsid", user.getSnsid());
         pre.putInt("location", user.getLocation());
+        pre.putInt("teamid", user.getTeamid());
         pre.putString("gmail", user.getGoogleemail());
         pre.putString("teampushflag", user.getTeampushflag());
         pre.putString("apppushflag", user.getApppushflag());
@@ -49,7 +50,7 @@ public class PrefUtil {
         User user = new User();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        user.setUid(sp.getInt("uid", -1));
+        user.setUid(sp.getInt("uid", 0));
         user.setUsername(sp.getString("username",null));
         user.setUseremail(sp.getString("email", null));
         user.setSnsname(sp.getString("snsname", null));
@@ -57,10 +58,11 @@ public class PrefUtil {
         user.setProfileimgurl(sp.getString("profileImgUrl", null));
         user.setSnstype(sp.getString("snstype", null));
         user.setSnsid(sp.getString("snsid", null));
-        user.setLocation(sp.getInt("location", -1));
+        user.setLocation(sp.getInt("location", 0));
         user.setGoogleemail(sp.getString("gmail", null));
         user.setTeampushflag(sp.getString("teampushflag", null));
         user.setApppushflag(sp.getString("apppushflag", null));
+        user.setTeamid(sp.getInt("teamid", 0));
 
         return user;
     }
