@@ -152,7 +152,7 @@ public class LoginInfoActivity extends AppCompatActivity {
         userVo.setProfileimgurl(profileImgUrl);
         userVo.setSnstype(snstype);
         userVo.setLocation(0);
-        //userVo.setPhone(phoneNum);
+        userVo.setPassword(snsid);
         userVo.setTeampushflag("Y");
         userVo.setApppushflag("Y");
         userVo.setTeamid(0);
@@ -180,6 +180,7 @@ public class LoginInfoActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "서버와 통신", "회원가입을 진행하고 있습니다", true);
         dialog.show();
 
+        //RetrofitService retrofitService = new RetrofitService(this);
         final Call<Integer> userCre = RetrofitService.userService().createUser(user);
 
         userCre.enqueue(new Callback<Integer>() {

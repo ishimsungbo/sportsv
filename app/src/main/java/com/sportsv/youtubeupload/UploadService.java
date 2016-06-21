@@ -136,6 +136,7 @@ public class UploadService extends IntentService {
 
 
 
+/*
             UserMission userMission = new UserMission();
             userMission.setMissionid(Integer.parseInt(missionid));
             userMission.setUid(Integer.parseInt(uid));
@@ -147,6 +148,7 @@ public class UploadService extends IntentService {
 
             UserMissionTRService trService = new UserMissionTRService();
             trService.createUserMission(userMission);
+*/
 
 
         } catch (FileNotFoundException e) {

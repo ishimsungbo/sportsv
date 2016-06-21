@@ -42,6 +42,9 @@ public class UserMissionTRService {
 
     public void createUserMission(UserMission userMission){
 
+
+        //RetrofitService retrofitService = new RetrofitService(activity);
+
         final Call<Integer> createMission = RetrofitService.userMissionService().createUserMission(userMission);
 
         createMission.enqueue(new Callback<Integer>() {
@@ -65,6 +68,7 @@ public class UserMissionTRService {
                                    int uId,
                                    String youTubeaddr){
 
+        //RetrofitService retrofitService = new RetrofitService(activity);
         final Call<String> updateUserMission = RetrofitService.userMissionService().updateUserMission(userMissionId,uId,youTubeaddr);
 
         updateUserMission.enqueue(new Callback<String>() {

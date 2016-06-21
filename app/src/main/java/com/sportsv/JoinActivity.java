@@ -186,8 +186,10 @@ public class JoinActivity extends AppCompatActivity {
 
         final ProgressDialog dialog;
 
-        dialog = ProgressDialog.show(this, "서버와 통신", "회원가입을 진행하고 있습니다", true);
+        dialog = ProgressDialog.show(this, "서버와 통신", "일반회원가입을 진행하고 있습니다", true);
         dialog.show();
+
+        //RetrofitService retrofitService = new RetrofitService(this);
 
         final Call<Integer> userCre = RetrofitService.userService().createUser(user);
 

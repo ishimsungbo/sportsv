@@ -258,6 +258,8 @@ public class LoginActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "서버와 통신", "회원검증을 진행합니다", true);
         dialog.show();
 
+        //RetrofitService retrofitService = new RetrofitService(this);
+
         final Call<User> getUserInfo = RetrofitService.userService().getUser(type, id, pw, email);
 
         getUserInfo.enqueue(new Callback<User>() {
@@ -290,6 +292,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 } else {
                     Log.d(TAG, "조회 결과 실패");
+
                 }
 
                 dialog.dismiss();

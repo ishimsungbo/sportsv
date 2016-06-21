@@ -1,17 +1,24 @@
 package com.sportsv.test;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.sportsv.R;
@@ -19,8 +26,10 @@ import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserMissionService;
 import com.sportsv.dbnetwork.UserMissionTRService;
 import com.sportsv.serverservice.RetrofitService;
+import com.sportsv.vo.FeedbackHeader;
 import com.sportsv.vo.User;
 import com.sportsv.vo.UserMission;
+import com.sportsv.widget.VeteranToast;
 import com.sportsv.youtubeupload.StartUploadActivity;
 
 import org.springframework.http.HttpAuthentication;
@@ -34,6 +43,7 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -47,6 +57,8 @@ import retrofit.http.Body;
  * Created by sungbo on 2016-06-08.
  */
 public class TestActivity extends AppCompatActivity {
+
+    private static final int RESULT_WEBSITE = 1;
 
     private static final String TAG = "TestActivity";
 
@@ -64,14 +76,10 @@ public class TestActivity extends AppCompatActivity {
     User user;
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+    ProgressDialog asyncDialog;
 
-        }
+    private ProgressBar mProgressLarge;
 
-    }
     /****************************************************************************************************
      ****************************************************************************************************
      * **************************************************************************************************
@@ -135,6 +143,16 @@ public class TestActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        //프로그레스바 테스트
+        mProgressLarge = (ProgressBar) findViewById(R.id.progcircle);
+        mProgressLarge.setVisibility(ProgressBar.GONE);
+
+        asyncDialog = new ProgressDialog(this);
+        asyncDialog.setTitle("안녕하세요 프로그레스바 돌립니다");
+
+
  }
 
     @Override
@@ -197,11 +215,89 @@ public class TestActivity extends AppCompatActivity {
     @OnClick(R.id.btnupdate)
     public void btnupdate(){
 
-        UserMissionTRService service = new UserMissionTRService(this);
-        service.updateUserMisssion(9,174,"dajisdpodmkl");
+        UserMission userMission = new UserMission();
+        userMission.setMissionid(1);
+        userMission.setUid(1);
+        userMission.setSubject("테스트 생성 미션 입니다");
+        userMission.setUploadflag("N");
+        userMission.setPassflag("N");
+        userMission.setYoutubeaddr("ileandd");
+        userMission.setFilename("filename.mp3");
+
+        UserMissionTRService trService = new UserMissionTRService();
+        trService.createUserMission(userMission);
 
     }
 
+    @OnClick(R.id.btn_webview)
+    public void btn_webview(){
 
+
+        /*
+        1.인텐트 방식으로 웹 브라우저 호출. 독립적으로 실행하기 때문에 안드로이드 컨트룰 불가능
+        //String url ="selphone://post_detail?post_id=10"; get 방식으로 데이터에 맞는 url를 호출할 수 있다.
+
+        String url = "https://m.youtube.com/create_channel?chromeless=1&next=/channel_creation_done";
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://m.youtube.com/create_channel?chromeless=1&next=/channel_creation_done"));
+        intent.setPackage("com.android.chrome");
+        startActivityForResult(intent, RESULT_WEBSITE);
+        */
+
+        
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case RESULT_WEBSITE:
+
+                Log.d(TAG,"값은 : "+requestCode);
+
+                break;
+        }
+    }
+
+    @OnClick(R.id.progressstart)
+    public void progress(){
+            mProgressLarge.setVisibility(ProgressBar.VISIBLE);
+            mProgressLarge.setIndeterminate(true);
+            mProgressLarge.setMax(100);
+
+        asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        asyncDialog.setMessage("로딩중입니다..");
+        asyncDialog.show();
+    }
+
+    @OnClick(R.id.progressstop)
+    public void progressstop(){
+        mProgressLarge.setVisibility(ProgressBar.INVISIBLE);
+        asyncDialog.dismiss();
+    }
+
+
+    @OnClick(R.id.btn_feed)
+    public void btn_feed(){
+
+        Call<List<FeedbackHeader>> call = RetrofitService.feedBackService().getFeedHeaderList(new FeedbackHeader(1));
+
+        call.enqueue(new Callback<List<FeedbackHeader>>() {
+            @Override
+            public void onResponse(Response<List<FeedbackHeader>> response, Retrofit retrofit) {
+
+                List<FeedbackHeader> headers = response.body();
+
+                Log.d(TAG,"값은 : " + headers.get(0).toString());
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+    }
 
 }

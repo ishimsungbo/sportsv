@@ -1,9 +1,12 @@
 package com.sportsv.serverservice;
 
 
+import android.content.Context;
 import android.util.Log;
 
+import com.sportsv.common.Auth;
 import com.sportsv.common.Common;
+import com.sportsv.dao.FeedBackService;
 import com.sportsv.dao.PointService;
 import com.sportsv.dao.UserMissionService;
 import com.sportsv.dao.UserService;
@@ -27,6 +30,12 @@ public class RetrofitService {
 
     private static final String TAG = "RetrofitService";
 
+    private Context context;
+
+    //public RetrofitService(Context context) {
+    //    this.context = context;
+   // }
+
     private static Retrofit getRetrofit(){
 
 
@@ -34,13 +43,16 @@ public class RetrofitService {
 
         OkHttpClient httpClient = new OkHttpClient();
 
+        //httpClient.interceptors().add(new AddCookiesInterceptor(context));
+        //httpClient.interceptors().add(new ReceivedCookiesInterceptor(context));
+
 
         httpClient.setAuthenticator(new Authenticator() {
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {
 
                 //비번설정
-                String credential = Credentials.basic("SportsVeteranUser","sksmsRhrtjdrhdgkrhakfxpek");
+                String credential = Credentials.basic("mom@mom.com","ss780323");
                 return response.request().newBuilder().header("Authorization", credential).build();
             }
 
@@ -70,6 +82,11 @@ public class RetrofitService {
     public static UserMissionService userMissionService(){
         Log.d(TAG,"RetrofitService.userMissionService() excuting");
         return getRetrofit().create(UserMissionService.class);
+    }
+
+    public static FeedBackService feedBackService(){
+        Log.d(TAG,"RetrofitService.FeedBackService() excuting");
+        return getRetrofit().create(FeedBackService.class);
     }
 
 

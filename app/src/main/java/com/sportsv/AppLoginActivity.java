@@ -98,6 +98,9 @@ public class AppLoginActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "서버와 통신", "회원검증을 진행합니다", true);
         dialog.show();
 
+
+        //RetrofitService retrofitService = new RetrofitService(this);
+
         final Call<Integer> getUserInfo = RetrofitService.userService().getUserCheck(snstype,useremail,password);
 
 
@@ -151,6 +154,8 @@ public class AppLoginActivity extends AppCompatActivity {
         final ProgressDialog dialog;
         dialog = ProgressDialog.show(this, "서버와 통신", "회원정보를 서버에서 가져옵니다", true);
         dialog.show();
+
+        //RetrofitService retrofitService = new RetrofitService(this);
 
         final Call<User> getUserInfo = RetrofitService.userService().getUser(parameterUser.getSnstype(),
                                                                              parameterUser.getSnsid(),

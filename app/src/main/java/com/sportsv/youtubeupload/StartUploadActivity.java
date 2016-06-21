@@ -41,9 +41,13 @@ import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelListResponse;
+import com.google.api.services.youtube.model.Playlist;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
+import com.google.api.services.youtube.model.PlaylistSnippet;
+import com.google.api.services.youtube.model.PlaylistStatus;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
@@ -288,6 +292,15 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
                     ChannelListResponse clr = youtube.channels()
                             .list("contentDetails").setMine(true).execute();
 
+                    List<Channel> channelsList =  clr.getItems();
+
+
+                    Log.d(TAG,"==============================================================");
+
+
+
+                    Log.d(TAG,"==============================================================");
+
                     // Get the user's uploads playlist's id from channel list
                     // response
                     String uploadsPlaylistId = clr.getItems().get(0)
@@ -295,6 +308,7 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
                             .getUploads();
 
                     List<VideoData> videos = new ArrayList<VideoData>();
+
 
                     // Get videos from user's upload playlist with a playlist
                     // items list request
@@ -451,5 +465,7 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+
+
 
 }

@@ -53,6 +53,7 @@ public class ResumableUpload {
 
             String videoId = null;
 
+
             try {
                 // Add extra information to the video before uploading.
                 Video videoObjectDefiningMetadata = new Video();
@@ -155,7 +156,9 @@ public class ResumableUpload {
 
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
-                //notifyFailedUpload(context, context.getString(R.string.please_try_again), notifyManager, builder);
+                //구글계정은 있지만 유투브 계정이 없기 떄문에 에러가 난다면...웹뷰로 유투브 인증을 해줘야 한다.
+
+
             }
             return videoId;
         }

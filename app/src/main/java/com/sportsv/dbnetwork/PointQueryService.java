@@ -51,6 +51,7 @@ public class PointQueryService {
 
         //dialog = ProgressDialog.show(context, "서버와 통신", "셀프 포인트를 조회합니다", true);
         //dialog.show();
+        //RetrofitService retrofitService = new RetrofitService(context);
 
         final Call<SpBalanceHeader> spBalanceHeaderCall = RetrofitService.pointService().getSelfAmt(uid);
 
@@ -93,6 +94,8 @@ public class PointQueryService {
 
         //dialog = ProgressDialog.show(context, "서버와 통신", "Cash 포인트를 조회합니다", true);
         //dialog.show();
+
+        //RetrofitService retrofitService = new RetrofitService(context);
 
         final Call<CpBalanceHeader> call = RetrofitService.pointService().getCashAmt(uid);
 

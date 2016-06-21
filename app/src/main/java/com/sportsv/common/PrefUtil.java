@@ -41,6 +41,7 @@ public class PrefUtil {
         pre.putString("gmail", user.getGoogleemail());
         pre.putString("teampushflag", user.getTeampushflag());
         pre.putString("apppushflag", user.getApppushflag());
+        pre.putString("password",user.getPassword());
 
         pre.commit();
     }
@@ -63,6 +64,7 @@ public class PrefUtil {
         user.setTeampushflag(sp.getString("teampushflag", null));
         user.setApppushflag(sp.getString("apppushflag", null));
         user.setTeamid(sp.getInt("teamid", 0));
+        user.setPassword(sp.getString("password", null));
 
         return user;
     }

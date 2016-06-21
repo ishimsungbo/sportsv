@@ -133,4 +133,11 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
+    @OnClick(R.id.btn_progress)
+    public void btn_progress(){
+        Intent intent = new Intent(this,ProgressActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
 }
