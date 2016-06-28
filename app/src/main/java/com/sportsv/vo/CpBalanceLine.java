@@ -16,12 +16,28 @@ public class CpBalanceLine {
     private int out_amount;
     private int last_amount;
     private String description;
-    private Date creationdate;
+    private String creationdate;
     private String change_creationdate;
 
     public CpBalanceLine(){}
 
-    public CpBalanceLine(int lineid, int headerid, String type, int previous_amount, int in_amount, int out_amount, int last_amount, String description, Date creationdate, String change_creationdate) {
+    @Override
+    public String toString() {
+        return "CpBalanceLine{" +
+                "lineid=" + lineid +
+                ", headerid=" + headerid +
+                ", type='" + type + '\'' +
+                ", previous_amount=" + previous_amount +
+                ", in_amount=" + in_amount +
+                ", out_amount=" + out_amount +
+                ", last_amount=" + last_amount +
+                ", description='" + description + '\'' +
+                ", creationdate='" + creationdate + '\'' +
+                ", change_creationdate='" + change_creationdate + '\'' +
+                '}';
+    }
+
+    public CpBalanceLine(int lineid, int headerid, String type, int previous_amount, int in_amount, int out_amount, int last_amount, String description, String creationdate, String change_creationdate) {
         this.lineid = lineid;
         this.headerid = headerid;
         this.type = type;
@@ -35,6 +51,7 @@ public class CpBalanceLine {
     }
 
     public int getLineid() {
+
         return lineid;
     }
 
@@ -98,21 +115,19 @@ public class CpBalanceLine {
         this.description = description;
     }
 
-    public Date getCreationdate() {
+    public String getCreationdate() {
         return creationdate;
     }
 
-    public void setCreationdate(Date creationdate) {
+    public void setCreationdate(String creationdate) {
         this.creationdate = creationdate;
     }
 
-    public String getChange_updatedate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
-        change_creationdate = dateFormat.format(creationdate);
+    public String getChange_creationdate() {
         return change_creationdate;
     }
 
-    public void setChange_updatedate(String change_updatedate) {
-        this.change_creationdate = change_updatedate;
+    public void setChange_creationdate(String change_creationdate) {
+        this.change_creationdate = change_creationdate;
     }
 }

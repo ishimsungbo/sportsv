@@ -13,18 +13,21 @@ import android.widget.Toast;
 import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
+
 import com.sportsv.dao.UserService;
-import com.sportsv.serverservice.RetrofitService;
+import com.sportsv.retropit.ServiceGenerator;
+import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 
 /**
  * Created by sungbo on 2016-06-06.
@@ -85,44 +88,46 @@ public class AppLoginActivity extends AppCompatActivity {
             parameterUser.setUseremail(edit_email_lg.getText().toString());
 
             //서버에서 아이디와 비번 검증
-            userLogin(parameterUser.getSnstype(),parameterUser.getUseremail(),parameterUser.getPassword());
+            userLogin();
 
         }
     }
 
-    public void userLogin(String snstype,
-                          String useremail,
-                          String password){
+    public void userLogin(){
 
         final ProgressDialog dialog;
         dialog = ProgressDialog.show(this, "서버와 통신", "회원검증을 진행합니다", true);
         dialog.show();
 
 
-        //RetrofitService retrofitService = new RetrofitService(this);
+        UserService userService = ServiceGenerator.createService(UserService.class,parameterUser);
 
-        final Call<Integer> getUserInfo = RetrofitService.userService().getUserCheck(snstype,useremail,password);
+        final Call<ServerResult> getUserInfo = userService.getUserCheck(parameterUser.getSnstype(),parameterUser.getUseremail());
 
 
-        getUserInfo.enqueue(new Callback<Integer>() {
+        getUserInfo.enqueue(new Callback<ServerResult>() {
             @Override
-            public void onResponse(Response<Integer> response, Retrofit retrofit) {
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
 
                 Log.d(TAG, "서버 조회 결과 성공");
-                int resultCount = response.body();
-                Log.d(TAG, "서버 조회 결과 값은 : " + resultCount);
+
+                ServerResult serverResult = response.body();
+
+                Log.d(TAG, "서버 조회 결과 값은 : " + serverResult.getResult());
+
                 dialog.dismiss();
 
-                if(resultCount==1){
+                if(serverResult.getCount()==1){
+
                     getUserSet();
+
                 }else{
                     VeteranToast.makeToast(getApplicationContext(),"입력하신 계정이 존재하지 않습니다",Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ServerResult> call, Throwable t) {
                 Log.d(TAG, "환경 구성 확인 필요 서버와 통신 불가" + t.getMessage());
                 t.printStackTrace();
                 dialog.dismiss();
@@ -155,26 +160,30 @@ public class AppLoginActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "서버와 통신", "회원정보를 서버에서 가져옵니다", true);
         dialog.show();
 
-        //RetrofitService retrofitService = new RetrofitService(this);
-
-        final Call<User> getUserInfo = RetrofitService.userService().getUser(parameterUser.getSnstype(),
+        UserService userService = ServiceGenerator.createService(UserService.class);
+        final Call<User> getUserInfo = userService.getUser(parameterUser.getSnstype(),
                                                                              parameterUser.getSnsid(),
                                                                              parameterUser.getPassword(),
                                                                              parameterUser.getUseremail());
         getUserInfo.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Response<User> response, Retrofit retrofit) {
+            public void onResponse(Call<User> call, Response<User> response) {
+
                 SERVERUSER = response.body();
+
+                SERVERUSER.setPassword(parameterUser.getPassword());
+
                 dialog.dismiss();
+
                 Log.d(TAG, "2.유저 정보를 가져 왔습니다");
 
                 userExist();
-
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 Log.d(TAG, "환경 구성 확인 필요 서버와 통신 불가" + t.getMessage());
+
                 t.printStackTrace();
                 dialog.dismiss();
             }

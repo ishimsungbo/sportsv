@@ -60,4 +60,15 @@ public class SpBalanceHeader {
     public void setUpdatedate(String updatedate) {
         this.updatedate = updatedate;
     }
+
+    @Override
+    public String toString() {
+        return "SpBalanceHeader{" +
+                "headerid=" + headerid +
+                ", uid=" + uid +
+                ", amount=" + amount +
+                ", updatedate='" + updatedate + '\'' +
+                ", change_updatedate='" + change_updatedate + '\'' +
+                '}';
+    }
 }

@@ -27,7 +27,8 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 import com.sportsv.common.PrefUtil;
-import com.sportsv.serverservice.RetrofitService;
+import com.sportsv.dao.UserService;
+import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.User;
 
 import org.json.JSONObject;
@@ -37,10 +38,10 @@ import java.util.Arrays;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -258,15 +259,15 @@ public class LoginActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "서버와 통신", "회원검증을 진행합니다", true);
         dialog.show();
 
-        //RetrofitService retrofitService = new RetrofitService(this);
+        UserService userService = ServiceGenerator.createService(UserService.class);
+        final Call<User> getUserInfo = userService.getUser(type, id, pw, email);
 
-        final Call<User> getUserInfo = RetrofitService.userService().getUser(type, id, pw, email);
 
         getUserInfo.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Response<User> response, Retrofit retrofit) {
+            public void onResponse(Call<User> call, Response<User> response) {
 
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     Log.d(TAG, "서버 조회 결과 성공");
 
                     SERVERUSER = response.body();
@@ -291,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Log.d(TAG, "조회 결과 실패");
+                    Log.d(TAG, "조회 결과 실패 ===");
 
                 }
 
@@ -299,7 +300,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 Log.d(TAG, "환경 구성 확인 서버와 통신 불가" + t.getMessage());
                 t.printStackTrace();
                 dialog.dismiss();

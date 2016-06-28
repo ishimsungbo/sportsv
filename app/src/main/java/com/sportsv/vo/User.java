@@ -1,5 +1,6 @@
 package com.sportsv.vo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User {
@@ -18,7 +19,8 @@ public class User {
 	private String apppushflag;
 	private String teampushflag;
 	private int teamid;
-	private Date creationdate;
+	private String creationdate;
+	private String change_creationdate;
 
 
 	public User() {
@@ -28,7 +30,7 @@ public class User {
 		this.useremail = useremail;
 	}
 
-	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, Date creationdate) {
+	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, String creationdate, String change_creationdate) {
 		this.uid = uid;
 		this.useremail = useremail;
 		this.username = username;
@@ -44,6 +46,7 @@ public class User {
 		this.teampushflag = teampushflag;
 		this.teamid = teamid;
 		this.creationdate = creationdate;
+		this.change_creationdate = change_creationdate;
 	}
 
 	public int getUid() {
@@ -158,18 +161,28 @@ public class User {
 		this.teamid = teamid;
 	}
 
-	public Date getCreationdate() {
+
+	public String getCreationdate() {
 		return creationdate;
 	}
 
-	public void setCreationdate(Date creationdate) {
+	public void setCreationdate(String creationdate) {
 		this.creationdate = creationdate;
+	}
+
+	public String getChange_creationdate() {
+		return change_creationdate;
+	}
+
+	public void setChange_creationdate(String change_creationdate) {
+		this.change_creationdate = change_creationdate;
 	}
 
 	@Override
 	public String toString() {
 		return "User{" +
-				"uid=" + uid +
+				"change_creationdate='" + change_creationdate + '\'' +
+				", uid=" + uid +
 				", useremail='" + useremail + '\'' +
 				", username='" + username + '\'' +
 				", snsid='" + snsid + '\'' +
@@ -183,7 +196,7 @@ public class User {
 				", apppushflag='" + apppushflag + '\'' +
 				", teampushflag='" + teampushflag + '\'' +
 				", teamid=" + teamid +
-				", creationdate=" + creationdate +
+				", creationdate='" + creationdate + '\'' +
 				'}';
 	}
 }

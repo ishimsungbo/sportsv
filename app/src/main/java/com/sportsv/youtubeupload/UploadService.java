@@ -18,9 +18,6 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
 import com.google.common.collect.Lists;
 import com.sportsv.common.Auth;
-import com.sportsv.dbnetwork.UserMissionTRService;
-import com.sportsv.vo.UserMission;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -134,21 +131,6 @@ public class UploadService extends IntentService {
 
             Log.d(TAG,"비디오 아이디는 : " + videoId);
 
-
-
-/*
-            UserMission userMission = new UserMission();
-            userMission.setMissionid(Integer.parseInt(missionid));
-            userMission.setUid(Integer.parseInt(uid));
-            userMission.setSubject("테스트 생성 미션 입니다");
-            userMission.setUploadflag("N");
-            userMission.setPassflag("N");
-            userMission.setYoutubeaddr(videoId);
-            userMission.setFilename(filename);
-
-            UserMissionTRService trService = new UserMissionTRService();
-            trService.createUserMission(userMission);
-*/
 
 
         } catch (FileNotFoundException e) {

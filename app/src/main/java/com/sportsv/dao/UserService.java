@@ -1,29 +1,24 @@
 package com.sportsv.dao;
 
+import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
-import com.squareup.okhttp.RequestBody;
 
-import org.springframework.core.io.Resource;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
 
-import retrofit.Call;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.Part;
-import retrofit.http.Query;
-import retrofit.http.Streaming;
 
 /**
  * Created by sungbo on 2016-05-27.
  */
 public interface UserService {
 
-    @POST("/api/user/insert")
+    @POST("/all/insert")
     Call<Integer> createUser(@Body User user);
 
-    @GET("/api/user/existuser")
+    @GET("/all/existuser")
     Call<User> getUser(
             @Query("snstype") String snstype,
             @Query("snsid") String snsid,
@@ -31,28 +26,12 @@ public interface UserService {
             @Query("useremail") String useremail);
 
     @GET("/api/user/userCheck")
-    Call<Integer> getUserCheck(
+    Call<ServerResult> getUserCheck(
             @Query("snstype") String snstype,
-            @Query("email") String email,
-            @Query("pw") String pw);
-
-    //출석체크
-    @GET("/api/user/userdailycheck")
-    Call<String> daliyCheck(
-            @Query("uid") String uid,
-            @Query("pointtype") String pointType,
-            @Query("lang") String lang
-    );
-
-    @Multipart
-    @POST("/api/user/fileupload")
-    Call<String> fileupload(
-            @Part(value = "uid") RequestBody  uid
-            //@Part(value = "filename") RequestBody  filename,
-            //@Part("file") RequestBody file,
-            //@Part(value = "profileimgurl") RequestBody  profileimgurl
-    );
+            @Query("email") String email);
 
 
+    @GET("/all/usertest")
+    Call<User> getUserTest();
 
 }

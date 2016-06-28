@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -27,25 +26,29 @@ import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.common.SettingActivity;
+import com.sportsv.dao.PointService;
+import com.sportsv.dao.UserService;
 import com.sportsv.dbnetwork.PointQueryService;
-import com.sportsv.dbnetwork.UserMissionTRService;
-import com.sportsv.dbnetwork.UserTRService;
+import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.serverservice.FileUploadService;
-import com.sportsv.serverservice.RetrofitService;
 import com.sportsv.vo.CpBalanceHeader;
+import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.SpBalanceHeader;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 
 /**
@@ -129,7 +132,6 @@ public class UserInfoActivity extends AppCompatActivity{
         }
 
         prefUtil.clearPrefereance();
-
         VeteranToast.makeToast(getApplicationContext(), "로그아웃 합니다", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -166,8 +168,8 @@ public class UserInfoActivity extends AppCompatActivity{
         spBalanceHeader = new SpBalanceHeader();
         cpBalanceHeader = new CpBalanceHeader();
 
-        PointQueryService queryServiceSelf = new PointQueryService(TAG,this,spBalanceHeader,tx_selfpoint_amount,user.getUid());
-        PointQueryService queryServiceCash = new PointQueryService(TAG,this,cpBalanceHeader,tx_cash_point_amount,user.getUid());
+        PointQueryService queryServiceSelf = new PointQueryService(TAG,this,spBalanceHeader,tx_selfpoint_amount,user);
+        PointQueryService queryServiceCash = new PointQueryService(TAG,this,cpBalanceHeader,tx_cash_point_amount,user);
 
         queryServiceSelf.getSelfPoint();
         queryServiceCash.getCashPoint();
@@ -263,6 +265,8 @@ public class UserInfoActivity extends AppCompatActivity{
                 //크롭된 이미지를 저장하기 위한 file 경로
                 String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel/"+System.currentTimeMillis()+".jpg";
 
+                Log.d(TAG,"파일 경로는 : " + filePath);
+
                 RealFilePath = filePath;
                 fileName    = System.currentTimeMillis()+".jpg";
 
@@ -350,7 +354,7 @@ public class UserInfoActivity extends AppCompatActivity{
         //확장자를 포함한 파일명
         //확장자를 포함한 파일의 위치+파일명
 
-        new FileUploadService(StrUid,fileName,RealFilePath).execute();
+        new FileUploadService(StrUid,fileName,RealFilePath,user,this).execute();
 
 
         //유저사진을 쉐어퍼런스에 저장해준다(업데이트)
@@ -382,15 +386,35 @@ public class UserInfoActivity extends AppCompatActivity{
     @OnClick(R.id.btn_daily_check)
     public void btn_daily_check(){
 
-        UserTRService trService = new UserTRService(this);
-        trService.daliyCheck(
-                user.getUid(),    //유저아아디
-                "DALIY",            // 포인트타입
-                "KR"              // 국가코드
-                ,tx_selfpoint_amount
-        );
+        PointService pointService = ServiceGenerator.createService(PointService.class,user);
+        final Call<ServerResult> call = pointService.daliyCheck(String.valueOf(user.getUid()),"DALIY","KR");
 
+        call.enqueue(new Callback<ServerResult>() {
+            @Override
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
 
+                if(response.isSuccessful()){
+
+                    ServerResult result = response.body();
+
+                    if(result.getResult().equals("exist")){
+                        VeteranToast.makeToast(getApplicationContext(),"오늘 출석을 하셨습니다",0).show();
+                        Log.d(TAG,"***************************");
+                    }else{
+                        Log.d(TAG,"===========================");
+                        tx_selfpoint_amount.setText(result.getResult());
+                    }
+
+                }else{
+                    VeteranToast.makeToast(getApplicationContext(),"출석 체크 값을 못가져왔습니다",0).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServerResult> call, Throwable t) {
+                VeteranToast.makeToast(getApplicationContext(),"실패~~~~~~~",0).show();
+                t.printStackTrace();
+            }
+        });
     }
-
 }

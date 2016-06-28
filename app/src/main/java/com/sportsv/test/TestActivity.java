@@ -6,52 +6,36 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.sportsv.R;
 import com.sportsv.common.PrefUtil;
-import com.sportsv.dao.UserMissionService;
+import com.sportsv.dao.FeedBackService;
+import com.sportsv.dao.InstructorService;
+import com.sportsv.dao.UserService;
 import com.sportsv.dbnetwork.UserMissionTRService;
-import com.sportsv.serverservice.RetrofitService;
+import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.FeedbackHeader;
+import com.sportsv.vo.Instructor;
+import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
 import com.sportsv.vo.UserMission;
 import com.sportsv.widget.VeteranToast;
 import com.sportsv.youtubeupload.StartUploadActivity;
 
-import org.springframework.http.HttpAuthentication;
-import org.springframework.http.HttpBasicAuthentication;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Collections;
-import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-import retrofit.http.Body;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * Created by sungbo on 2016-06-08.
@@ -153,7 +137,7 @@ public class TestActivity extends AppCompatActivity {
         asyncDialog.setTitle("안녕하세요 프로그레스바 돌립니다");
 
 
- }
+    }
 
     @Override
     protected void onStart() {
@@ -214,19 +198,7 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnupdate)
     public void btnupdate(){
-
-        UserMission userMission = new UserMission();
-        userMission.setMissionid(1);
-        userMission.setUid(1);
-        userMission.setSubject("테스트 생성 미션 입니다");
-        userMission.setUploadflag("N");
-        userMission.setPassflag("N");
-        userMission.setYoutubeaddr("ileandd");
-        userMission.setFilename("filename.mp3");
-
-        UserMissionTRService trService = new UserMissionTRService();
-        trService.createUserMission(userMission);
-
+        VeteranToast.makeToast(getApplicationContext(),"유저미션 생성",0).show();
     }
 
     @OnClick(R.id.btn_webview)
@@ -243,7 +215,7 @@ public class TestActivity extends AppCompatActivity {
         startActivityForResult(intent, RESULT_WEBSITE);
         */
 
-        
+
 
     }
 
@@ -261,9 +233,9 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.progressstart)
     public void progress(){
-            mProgressLarge.setVisibility(ProgressBar.VISIBLE);
-            mProgressLarge.setIndeterminate(true);
-            mProgressLarge.setMax(100);
+        mProgressLarge.setVisibility(ProgressBar.VISIBLE);
+        mProgressLarge.setIndeterminate(true);
+        mProgressLarge.setMax(100);
 
         asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         asyncDialog.setMessage("로딩중입니다..");
@@ -278,23 +250,40 @@ public class TestActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.btn_feed)
-    public void btn_feed(){
+    public void btn_feed() {
 
-        Call<List<FeedbackHeader>> call = RetrofitService.feedBackService().getFeedHeaderList(new FeedbackHeader(1));
+        //유저 검색
+        UserService userService = ServiceGenerator.createService(UserService.class);
+        final Call<User> getUserInfo =userService.getUserTest();
 
-        call.enqueue(new Callback<List<FeedbackHeader>>() {
+        getUserInfo.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Response<List<FeedbackHeader>> response, Retrofit retrofit) {
-
-                List<FeedbackHeader> headers = response.body();
-
-                Log.d(TAG,"값은 : " + headers.get(0).toString());
-
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG,"돌아온 값은 : " + response.body());
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
 
+        //강사 검색
+        Instructor ins = new Instructor();
+        ins.setEmail("mom@mom.com");
+        ins.setPassword("ss780323");
+
+        InstructorService service = ServiceGenerator.createService(InstructorService.class,ins);
+        final Call<Instructor> c = service.getInstrutor(ins);
+        c.enqueue(new Callback<Instructor>() {
+            @Override
+            public void onResponse(Call<Instructor> call, Response<Instructor> response) {
+                Log.d(TAG,"값은 : " + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Instructor> call, Throwable t) {
+                t.printStackTrace();
             }
         });
 

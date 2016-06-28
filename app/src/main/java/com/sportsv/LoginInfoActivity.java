@@ -17,16 +17,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
-import com.kakao.network.ErrorResult;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.MeResponseCallback;
-import com.kakao.usermgmt.response.model.UserProfile;
+
 import com.sportsv.common.Auth;
-import com.sportsv.common.Common;
+
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserService;
-import com.sportsv.serverservice.RetrofitService;
+import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 import java.util.Arrays;
@@ -34,10 +31,10 @@ import java.util.Arrays;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * Created by sungbo on 2016-05-30.
@@ -180,13 +177,15 @@ public class LoginInfoActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "서버와 통신", "회원가입을 진행하고 있습니다", true);
         dialog.show();
 
-        //RetrofitService retrofitService = new RetrofitService(this);
-        final Call<Integer> userCre = RetrofitService.userService().createUser(user);
+        UserService userService = ServiceGenerator.createService(UserService.class);
+
+
+        final Call<Integer> userCre = userService.createUser(user);
 
         userCre.enqueue(new Callback<Integer>() {
 
             @Override
-            public void onResponse(Response<Integer> response, Retrofit retrofit) {
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
                 try {
 
                     UID = response.body();
@@ -212,7 +211,7 @@ public class LoginInfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Integer> call, Throwable t) {
                 Log.d(TAG, "환경 구성 확인 필요 서버와 통신 불가 : " + t.getMessage());
                 t.printStackTrace();
                 dialog.dismiss();

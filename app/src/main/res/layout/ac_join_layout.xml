@@ -13,7 +13,21 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="200dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <EditText
+                android:id="@+id/edit_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="이름(옵션)"
+                android:inputType="textPersonName"/>
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/layout_user_email"
@@ -25,7 +39,7 @@
                 android:id="@+id/edit_user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="이메일주소"
                 android:inputType="textEmailAddress"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -38,7 +52,7 @@
                 android:id="@+id/edit_user_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="비밀번호"
                 android:password="true"
                 android:focusableInTouchMode="true"
                 android:maxLength="40"

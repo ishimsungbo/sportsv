@@ -1,5 +1,6 @@
 package com.sportsv.vo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -18,7 +19,9 @@ public class Instructor {
     private int pointhistoryid;
     private String feedbackflag;
     private String apppushflag;
-    private Date creationdate;
+    private String password;
+    private String creationdate;
+    private String change_creationdate;
 
     public Instructor(){}
 
@@ -110,16 +113,43 @@ public class Instructor {
         this.apppushflag = apppushflag;
     }
 
-    public Date getCreationdate() {
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCreationdate() {
         return creationdate;
     }
 
-    public void setCreationdate(Date creationdate) {
+    public void setCreationdate(String creationdate) {
         this.creationdate = creationdate;
     }
 
-    public Instructor(int instructorid, String email, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, Date creationdate) {
+    @Override
+    public String toString() {
+        return "Instructor{" +
+                "instructorid=" + instructorid +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", profile='" + profile + '\'' +
+                ", description='" + description + '\'' +
+                ", phone='" + phone + '\'' +
+                ", location=" + location +
+                ", teamid=" + teamid +
+                ", pointhistoryid=" + pointhistoryid +
+                ", feedbackflag='" + feedbackflag + '\'' +
+                ", apppushflag='" + apppushflag + '\'' +
+                ", password='" + password + '\'' +
+                ", creationdate='" + creationdate + '\'' +
+                ", change_creationdate='" + change_creationdate + '\'' +
+                '}';
+    }
 
+    public Instructor(int instructorid, String email, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, String password, String creationdate, String change_creationdate) {
         this.instructorid = instructorid;
         this.email = email;
         this.name = name;
@@ -131,6 +161,16 @@ public class Instructor {
         this.pointhistoryid = pointhistoryid;
         this.feedbackflag = feedbackflag;
         this.apppushflag = apppushflag;
+        this.password = password;
         this.creationdate = creationdate;
+        this.change_creationdate = change_creationdate;
+    }
+
+    public String getChange_creationdate() {
+        return change_creationdate;
+    }
+
+    public void setChange_creationdate(String change_creationdate) {
+        this.change_creationdate = change_creationdate;
     }
 }

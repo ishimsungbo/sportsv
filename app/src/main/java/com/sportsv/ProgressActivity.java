@@ -32,7 +32,8 @@ public class ProgressActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         customProgressDialog = new CustomProgressDialog(ProgressActivity.this);
-        customProgressDialog .getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
     }
 
 
@@ -46,6 +47,11 @@ public class ProgressActivity extends AppCompatActivity {
     public void btnbar(){
         CehckTypesTaski task = new CehckTypesTaski();
         task.execute();
+    }
+
+    @OnClick(R.id.btnCustom_end)
+    public void btnCustom_end(){
+        customProgressDialog.dismiss();
     }
 
     @OnClick(R.id.btnCustom)

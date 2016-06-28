@@ -12,12 +12,12 @@ public class MissionCategory {
     private String name;
     private String description;
     private String enabled;
-    private Date creationdate;
-    private Date   lastupdate;
+    private String creationdate;
+    private String   lastupdate;
 
     public MissionCategory(){}
 
-    public MissionCategory(int categoryid, String name, String description, String enabled, Date creationdate, Date lastupdate) {
+    public MissionCategory(int categoryid, String name, String description, String enabled, String creationdate, String lastupdate) {
         this.categoryid = categoryid;
         this.name = name;
         this.description = description;
@@ -58,20 +58,31 @@ public class MissionCategory {
         this.enabled = enabled;
     }
 
-    public Date getCreationdate() {
+    public String getCreationdate() {
         return creationdate;
     }
 
-    public void setCreationdate(Date creationdate) {
+    public void setCreationdate(String creationdate) {
         this.creationdate = creationdate;
     }
 
-    public Date getLastupdate() {
+    public String getLastupdate() {
         return lastupdate;
     }
 
-    public void setLastupdate(Date lastupdate) {
+    public void setLastupdate(String lastupdate) {
         this.lastupdate = lastupdate;
     }
 
+    @Override
+    public String toString() {
+        return "MissionCategory{" +
+                "categoryid=" + categoryid +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", enabled='" + enabled + '\'' +
+                ", creationdate='" + creationdate + '\'' +
+                ", lastupdate='" + lastupdate + '\'' +
+                '}';
+    }
 }

@@ -63,22 +63,24 @@ dependencies {
     //img glide
     compile 'com.github.bumptech.glide:glide:3.6.0'
     //retropit
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
     //facebook
     compile 'com.facebook.android:facebook-android-sdk:4.8.2'
-    compile files('libs/spring-android-rest-template-1.0.1.RELEASE.jar')
-    compile 'org.springframework:spring-core:4.2.6.RELEASE'
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.1.2'
+
     //google and youtube
     compile 'com.google.android.gms:play-services-plus:+'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 
-// http://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube
+    // http://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube
     compile group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev175-1.22.0'
     compile 'com.google.http-client:google-http-client-android:+'
     compile 'com.google.api-client:google-api-client-android:+'
     compile 'com.google.api-client:google-api-client-gson:+'
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.code.gson:gson:2.6.1'
 
 }

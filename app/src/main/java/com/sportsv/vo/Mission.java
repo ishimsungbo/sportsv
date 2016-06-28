@@ -1,10 +1,6 @@
 package com.sportsv.vo;
 
-import java.util.Date;
 
-/**
- * Created by sungbo on 2016-05-31.
- */
 public class Mission {
 
     private int missionid;
@@ -19,12 +15,16 @@ public class Mission {
     private String youtubeaddr;
     private String enabled;
     private String feetype;
-    private Date creationdate;
-    private Date lastupdate;
+    private int grade;          //미션업로드점수
+    private int passgrade;      //미션클리어점수
+    private String creationdate;
+    private String updatedate;
+    private String change_creationdate;
+    private String change_updatedate;
 
-    public Mission() {}
+    public Mission(){}
 
-    public Mission(int missionid, int categoryid, int typeid, int sequence, String missionname, String description, String precon, String videoaddr, String fullyoutubeaddr, String youtubeaddr, String enabled, String feetype, Date creationdate, Date lastupdate) {
+    public Mission(int missionid, int categoryid, int typeid, int sequence, String missionname, String description, String precon, String videoaddr, String fullyoutubeaddr, String youtubeaddr, String enabled, String feetype, int grade, int passgrade, String creationdate, String updatedate, String change_creationdate, String change_updatedate) {
         this.missionid = missionid;
         this.categoryid = categoryid;
         this.typeid = typeid;
@@ -37,8 +37,36 @@ public class Mission {
         this.youtubeaddr = youtubeaddr;
         this.enabled = enabled;
         this.feetype = feetype;
+        this.grade = grade;
+        this.passgrade = passgrade;
         this.creationdate = creationdate;
-        this.lastupdate = lastupdate;
+        this.updatedate = updatedate;
+        this.change_creationdate = change_creationdate;
+        this.change_updatedate = change_updatedate;
+    }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "missionid=" + missionid +
+                ", categoryid=" + categoryid +
+                ", typeid=" + typeid +
+                ", sequence=" + sequence +
+                ", missionname='" + missionname + '\'' +
+                ", description='" + description + '\'' +
+                ", precon='" + precon + '\'' +
+                ", videoaddr='" + videoaddr + '\'' +
+                ", fullyoutubeaddr='" + fullyoutubeaddr + '\'' +
+                ", youtubeaddr='" + youtubeaddr + '\'' +
+                ", enabled='" + enabled + '\'' +
+                ", feetype='" + feetype + '\'' +
+                ", grade=" + grade +
+                ", passgrade=" + passgrade +
+                ", creationdate='" + creationdate + '\'' +
+                ", updatedate='" + updatedate + '\'' +
+                ", change_creationdate='" + change_creationdate + '\'' +
+                ", change_updatedate='" + change_updatedate + '\'' +
+                '}';
     }
 
     public int getMissionid() {
@@ -137,19 +165,51 @@ public class Mission {
         this.feetype = feetype;
     }
 
-    public Date getCreationdate() {
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public int getPassgrade() {
+        return passgrade;
+    }
+
+    public void setPassgrade(int passgrade) {
+        this.passgrade = passgrade;
+    }
+
+    public String getCreationdate() {
         return creationdate;
     }
 
-    public void setCreationdate(Date creationdate) {
+    public void setCreationdate(String creationdate) {
         this.creationdate = creationdate;
     }
 
-    public Date getLastupdate() {
-        return lastupdate;
+    public String getUpdatedate() {
+        return updatedate;
     }
 
-    public void setLastupdate(Date lastupdate) {
-        this.lastupdate = lastupdate;
+    public void setUpdatedate(String updatedate) {
+        this.updatedate = updatedate;
+    }
+
+    public String getChange_creationdate() {
+        return change_creationdate;
+    }
+
+    public void setChange_creationdate(String change_creationdate) {
+        this.change_creationdate = change_creationdate;
+    }
+
+    public String getChange_updatedate() {
+        return change_updatedate;
+    }
+
+    public void setChange_updatedate(String change_updatedate) {
+        this.change_updatedate = change_updatedate;
     }
 }

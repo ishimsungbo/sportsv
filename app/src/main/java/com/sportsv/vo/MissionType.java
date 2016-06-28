@@ -11,12 +11,12 @@ public class MissionType {
     private String name;
     private String description;
     private String enable;
-    private Date creationdate;
-    private Date   lastupdate;
+    private String creationdate;
+    private String   lastupdate;
 
     public MissionType(){}
 
-    public MissionType(int typeid, String name, String description, String enable, Date creationdate, Date lastupdate) {
+    public MissionType(int typeid, String name, String description, String enable, String creationdate, String lastupdate) {
         this.typeid = typeid;
         this.name = name;
         this.description = description;
@@ -57,19 +57,31 @@ public class MissionType {
         this.enable = enable;
     }
 
-    public Date getCreationdate() {
+    public String getCreationdate() {
         return creationdate;
     }
 
-    public void setCreationdate(Date creationdate) {
+    public void setCreationdate(String creationdate) {
         this.creationdate = creationdate;
     }
 
-    public Date getLastupdate() {
+    public String getLastupdate() {
         return lastupdate;
     }
 
-    public void setLastupdate(Date lastupdate) {
+    public void setLastupdate(String lastupdate) {
         this.lastupdate = lastupdate;
+    }
+
+    @Override
+    public String toString() {
+        return "MissionType{" +
+                "typeid=" + typeid +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", enable='" + enable + '\'' +
+                ", creationdate='" + creationdate + '\'' +
+                ", lastupdate='" + lastupdate + '\'' +
+                '}';
     }
 }

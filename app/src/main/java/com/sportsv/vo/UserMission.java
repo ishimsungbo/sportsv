@@ -15,12 +15,12 @@ public class UserMission {
 	private String passflag;
 	private String videoaddr;
 	private String filename;
-	private Date creationdate;
+	private String creationdate;
 	private String change_creationdate;
 
 	public UserMission(){}
 
-	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, String filename, Date creationdate, String change_creationdate) {
+	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, String filename, String creationdate, String change_creationdate) {
 		this.usermissionid = usermissionid;
 		this.missionid = missionid;
 		this.uid = uid;
@@ -115,21 +115,37 @@ public class UserMission {
 		this.videoaddr = videoaddr;
 	}
 
-	public Date getCreationdate() {
+	public String getCreationdate() {
 		return creationdate;
 	}
 
-	public void setCreationdate(Date creationdate) {
+	public void setCreationdate(String creationdate) {
 		this.creationdate = creationdate;
 	}
 
 	public String getChange_creationdate() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
-		change_creationdate = dateFormat.format(creationdate);
 		return change_creationdate;
 	}
 
 	public void setChange_creationdate(String change_creationdate) {
 		this.change_creationdate = change_creationdate;
+	}
+
+	@Override
+	public String toString() {
+		return "UserMission{" +
+				"usermissionid=" + usermissionid +
+				", missionid=" + missionid +
+				", uid=" + uid +
+				", subject='" + subject + '\'' +
+				", descroption='" + descroption + '\'' +
+				", uploadflag='" + uploadflag + '\'' +
+				", youtubeaddr='" + youtubeaddr + '\'' +
+				", passflag='" + passflag + '\'' +
+				", videoaddr='" + videoaddr + '\'' +
+				", filename='" + filename + '\'' +
+				", creationdate='" + creationdate + '\'' +
+				", change_creationdate='" + change_creationdate + '\'' +
+				'}';
 	}
 }

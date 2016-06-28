@@ -52,15 +52,16 @@
         android:id="@+id/progcircle"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:visibility="invisible"
         />
 
 
     <Button
         android:id="@+id/btn_feed"
-        android:text="피드백자료가져오기"
+        android:text="서버통신 값"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
 
 </LinearLayout>

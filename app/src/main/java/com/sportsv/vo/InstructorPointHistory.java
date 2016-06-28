@@ -12,27 +12,17 @@ public class InstructorPointHistory {
     private int  instructorid;
     private int  videopoint;
     private int  wordpoint;
-    private Date creationdate;
+    private String creationdate;
     private String change_creationdate;
 
     public InstructorPointHistory(){}
 
-    public InstructorPointHistory(int pointhistoryid, int instructorid, int videopoint, int wordpoint, Date creationdate, String change_creationdate) {
+    public InstructorPointHistory(int pointhistoryid, int instructorid, int videopoint, int wordpoint, String creationdate, String change_creationdate) {
         this.pointhistoryid = pointhistoryid;
         this.instructorid = instructorid;
         this.videopoint = videopoint;
         this.wordpoint = wordpoint;
         this.creationdate = creationdate;
-        this.change_creationdate = change_creationdate;
-    }
-
-    public String getChange_creationdate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
-        change_creationdate = dateFormat.format(creationdate);
-        return change_creationdate;
-    }
-
-    public void setChange_creationdate(String change_creationdate) {
         this.change_creationdate = change_creationdate;
     }
 
@@ -68,11 +58,31 @@ public class InstructorPointHistory {
         this.wordpoint = wordpoint;
     }
 
-    public Date getCreationdate() {
+    public String getCreationdate() {
         return creationdate;
     }
 
-    public void setCreationdate(Date creationdate) {
+    public void setCreationdate(String creationdate) {
         this.creationdate = creationdate;
+    }
+
+    public String getChange_creationdate() {
+        return change_creationdate;
+    }
+
+    public void setChange_creationdate(String change_creationdate) {
+        this.change_creationdate = change_creationdate;
+    }
+
+    @Override
+    public String toString() {
+        return "InstructorPointHistory{" +
+                "pointhistoryid=" + pointhistoryid +
+                ", instructorid=" + instructorid +
+                ", videopoint=" + videopoint +
+                ", wordpoint=" + wordpoint +
+                ", creationdate='" + creationdate + '\'' +
+                ", change_creationdate='" + change_creationdate + '\'' +
+                '}';
     }
 }

@@ -1,18 +1,26 @@
 package com.sportsv.dbnetwork;
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.sportsv.serverservice.RetrofitService;
+import com.sportsv.CustomProgressDialog;
+import com.sportsv.ProgressActivity;
+import com.sportsv.dao.UserMissionService;
+import com.sportsv.retropit.ServiceGenerator;
+import com.sportsv.vo.ServerResult;
+import com.sportsv.vo.User;
 import com.sportsv.vo.UserMission;
 import com.sportsv.widget.VeteranToast;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by sungbo on 2016-06-13.
@@ -20,45 +28,47 @@ import retrofit.Retrofit;
 public class UserMissionTRService {
 
     private String TAG = "UserMissionTRService";
-    private AppCompatActivity activity;
-    private int usermissionid = 0 ;
 
+    private Context context;
+    private User user;
+
+    private int usermissionid = 0 ;
     private String resultCode="";
 
-    public String getResultCode() {
-        return resultCode;
-    }
 
-    public void setResultCode(String resultCode) {
-        this.resultCode = resultCode;
-    }
-
-    //유저미션을 생성할때 사용하는 생성자
-    public UserMissionTRService(){}
-
-    public UserMissionTRService(AppCompatActivity activity) {
-        this.activity = activity;
+    public UserMissionTRService(Context context, User user) {
+        this.context = context;
+        this.user = user;
     }
 
     public void createUserMission(UserMission userMission){
 
+        final ProgressDialog dialog;
 
-        //RetrofitService retrofitService = new RetrofitService(activity);
+        dialog = ProgressDialog.show(context, "서버와 통신", "셀프 포인트를 조회합니다", true);
+        dialog.show();
 
-        final Call<Integer> createMission = RetrofitService.userMissionService().createUserMission(userMission);
 
-        createMission.enqueue(new Callback<Integer>() {
+        UserMissionService userMissionService = ServiceGenerator.createService(UserMissionService.class,user);
+
+        final Call<ServerResult> createMission = userMissionService.createUserMission(userMission);
+
+        createMission.enqueue(new Callback<ServerResult>() {
             @Override
-            public void onResponse(Response<Integer> response, Retrofit retrofit) {
-                usermissionid = response.body();
-                Log.d(TAG, "서버에서 생성된 유저미션아이디는  : " + usermissionid );
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
+                ServerResult serverResult = response.body();
+
+                Log.d(TAG, "서버에서 생성된 유저미션아이디는  : " + serverResult.getCount() +"  :  "+serverResult.getResult() );
+
+                dialog.dismiss();
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ServerResult> call, Throwable t) {
                 Log.d(TAG, "환경 구성 확인 필요 서버와 통신 불가 : " + t.getMessage());
                 t.printStackTrace();
                 usermissionid = -1;
+                dialog.dismiss();
             }
         });
     }
@@ -68,26 +78,25 @@ public class UserMissionTRService {
                                    int uId,
                                    String youTubeaddr){
 
-        //RetrofitService retrofitService = new RetrofitService(activity);
-        final Call<String> updateUserMission = RetrofitService.userMissionService().updateUserMission(userMissionId,uId,youTubeaddr);
+        UserMissionService userMissionService = ServiceGenerator.createService(UserMissionService.class,user);
+        final Call<ServerResult> updateUserMission = userMissionService.updateUserMission(userMissionId,uId,youTubeaddr);
 
-        updateUserMission.enqueue(new Callback<String>() {
+        updateUserMission.enqueue(new Callback<ServerResult>() {
             @Override
-            public void onResponse(Response<String> response, Retrofit retrofit) {
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
 
-                resultCode = response.body();
-
-                Log.d(TAG,"결과 값은 : "+resultCode);
+                ServerResult serverResult = response.body();
+                Log.d(TAG,"서버요청 결과 값은 " + serverResult.toString());
 
                 if(resultCode.equals("update")){
-                    VeteranToast.makeToast(activity,"유저미션이 업데이트 되었습니다",Toast.LENGTH_LONG).show();
+                    VeteranToast.makeToast(context,"유저미션이 업데이트 되었습니다",Toast.LENGTH_LONG).show();
                 }else{
-                    VeteranToast.makeToast(activity,"유저미션 업데이트 도중 에러가 발생했습니다. 관리자에게 문의해주세요",Toast.LENGTH_LONG).show();
+                    VeteranToast.makeToast(context,"유저미션 업데이트 도중 에러가 발생했습니다. 관리자에게 문의해주세요",Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ServerResult> call, Throwable t) {
                 Log.d(TAG,"Error : " + t.getMessage());
                 t.printStackTrace();
             }
