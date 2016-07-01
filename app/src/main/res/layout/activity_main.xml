@@ -20,10 +20,17 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btn_progress"
-        android:text="프로그레스/쓰레드예제"
+        android:id="@+id/btn_getToken"
+        android:text="FCM토큰값가져오기"
         android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_play_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/play_again" />
 
 </LinearLayout>

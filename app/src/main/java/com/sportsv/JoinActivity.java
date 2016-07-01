@@ -17,12 +17,15 @@ import android.widget.Toast;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sportsv.common.Auth;
 import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserService;
+import com.sportsv.dbnetwork.FcmTokenTRService;
 import com.sportsv.retropit.ServiceGenerator;
+import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 
@@ -70,6 +73,8 @@ public class JoinActivity extends AppCompatActivity {
 
     String JoinCheck="N";
 
+    private FcmTokenTRService fcmTokenTRService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +112,9 @@ public class JoinActivity extends AppCompatActivity {
                 }
             }
         });
+
+        fcmTokenTRService = new FcmTokenTRService();
+
     }
 
     @OnClick(R.id.btn_sjoin)
@@ -132,6 +140,7 @@ public class JoinActivity extends AppCompatActivity {
                     userVo.setUseremail(tx_edit_user_email.getText().toString());
                     userVo.setPassword(tx_edit_user_password.getText().toString());
                     userVo.setUsername(edit_user_name.getText().toString());
+                    userVo.setFcmToken(FirebaseInstanceId.getInstance().getToken());
                     userCreate(userVo);
 
                 }else{
@@ -175,7 +184,6 @@ public class JoinActivity extends AppCompatActivity {
                         tx_sgoogleid.setText(accountName);
                         userVo.setGoogleemail(accountName);
                         userVo.setLocation(0);
-                        //userVo.setPhone(phoneNum);
                         userVo.setTeampushflag("Y");
                         userVo.setApppushflag("Y");
                     }
@@ -191,18 +199,18 @@ public class JoinActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "서버와 통신", "일반회원가입을 진행하고 있습니다", true);
         dialog.show();
 
-
         UserService userService = ServiceGenerator.createService(UserService.class);
 
-        final Call<Integer> userCre = userService.createUser(user);
+        final Call<ServerResult> userCre = userService.createUser(user);
 
-        userCre.enqueue(new Callback<Integer>() {
+        userCre.enqueue(new Callback<ServerResult>() {
 
             @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
                 try {
 
-                    UID = response.body();
+                    ServerResult serverResult = response.body();
+                    UID = serverResult.getCount();
                     dialog.dismiss();
 
                     Log.d(TAG, "서버에서 생성된 아이디는 : " + UID);
@@ -214,7 +222,10 @@ public class JoinActivity extends AppCompatActivity {
                         VeteranToast.makeToast(getApplicationContext(), user.getUseremail() +" 은 이미 가입되어 있는 주소입니다",Toast.LENGTH_SHORT).show();
                     } else {
                         userVo.setUid(UID);
+
+                        Log.d(TAG, "생성된 유저아이디는  : " + UID);
                         prefUtil.saveUser(userVo);
+
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.putExtra("join_y", "join_flag");
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -230,7 +241,7 @@ public class JoinActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
+            public void onFailure(Call<ServerResult> call, Throwable t) {
                 Log.d(TAG, "환경 구성 확인 필요 서버와 통신 불가 : " + t.getMessage());
                 t.printStackTrace();
                 dialog.dismiss();

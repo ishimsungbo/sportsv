@@ -1,7 +1,5 @@
 package com.sportsv.vo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class User {
 
@@ -19,8 +17,12 @@ public class User {
 	private String apppushflag;
 	private String teampushflag;
 	private int teamid;
+	private int commontokenid;
 	private String creationdate;
 	private String change_creationdate;
+
+	//DB
+	private String fcmToken;
 
 
 	public User() {
@@ -30,7 +32,7 @@ public class User {
 		this.useremail = useremail;
 	}
 
-	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, String creationdate, String change_creationdate) {
+	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, int commontokenid, String creationdate, String change_creationdate, String fcmToken) {
 		this.uid = uid;
 		this.useremail = useremail;
 		this.username = username;
@@ -45,8 +47,18 @@ public class User {
 		this.apppushflag = apppushflag;
 		this.teampushflag = teampushflag;
 		this.teamid = teamid;
+		this.commontokenid = commontokenid;
 		this.creationdate = creationdate;
 		this.change_creationdate = change_creationdate;
+		this.fcmToken = fcmToken;
+	}
+
+	public String getFcmToken() {
+		return fcmToken;
+	}
+
+	public void setFcmToken(String fcmToken) {
+		this.fcmToken = fcmToken;
 	}
 
 	public int getUid() {
@@ -178,11 +190,18 @@ public class User {
 		this.change_creationdate = change_creationdate;
 	}
 
+	public int getCommontokenid() {
+		return commontokenid;
+	}
+
+	public void setCommontokenid(int commontokenid) {
+		this.commontokenid = commontokenid;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
-				"change_creationdate='" + change_creationdate + '\'' +
-				", uid=" + uid +
+				"uid=" + uid +
 				", useremail='" + useremail + '\'' +
 				", username='" + username + '\'' +
 				", snsid='" + snsid + '\'' +
@@ -196,7 +215,10 @@ public class User {
 				", apppushflag='" + apppushflag + '\'' +
 				", teampushflag='" + teampushflag + '\'' +
 				", teamid=" + teamid +
+				", commontokenid=" + commontokenid +
 				", creationdate='" + creationdate + '\'' +
+				", change_creationdate='" + change_creationdate + '\'' +
+				", fcmToken='" + fcmToken + '\'' +
 				'}';
 	}
 }

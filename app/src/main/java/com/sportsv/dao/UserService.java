@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 public interface UserService {
 
     @POST("/all/insert")
-    Call<Integer> createUser(@Body User user);
+    Call<ServerResult> createUser(@Body User user);
 
     @GET("/all/existuser")
     Call<User> getUser(
@@ -29,7 +29,6 @@ public interface UserService {
     Call<ServerResult> getUserCheck(
             @Query("snstype") String snstype,
             @Query("email") String email);
-
 
     @GET("/all/usertest")
     Call<User> getUserTest();

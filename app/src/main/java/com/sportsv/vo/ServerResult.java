@@ -8,12 +8,19 @@ public class ServerResult {
 
     private int count;
     private String result;
+    private String errorMsg;
 
     public ServerResult(){}
 
     public ServerResult(int count, String result) {
         this.count = count;
         this.result = result;
+    }
+
+    public ServerResult(int count, String result, String errorMsg) {
+        this.count = count;
+        this.result = result;
+        this.errorMsg = errorMsg;
     }
 
     public int getCount() {
@@ -32,11 +39,20 @@ public class ServerResult {
         this.result = result;
     }
 
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
     @Override
     public String toString() {
         return "ServerResult{" +
                 "count=" + count +
                 ", result='" + result + '\'' +
+                ", errorMsg='" + errorMsg + '\'' +
                 '}';
     }
 }

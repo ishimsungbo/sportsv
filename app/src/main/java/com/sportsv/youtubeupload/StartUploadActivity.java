@@ -21,9 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
-import com.google.android.gms.auth.UserRecoverableAuthException;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
@@ -411,22 +409,13 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
 
         try {
 
-            String token = credential.getToken();
+            //String token = credential.getToken();
+            //Log.d(TAG, "구글 토큰값은 : "+token);
 
-            Log.d(TAG, "구글 토큰값은 : "+token);
-        } catch (GooglePlayServicesAvailabilityException playEx) {
 
-            playEx.getMessage();
-            playEx.printStackTrace();
-
-        }catch (UserRecoverableAuthException e) {
-            startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.getMessage();
             e.printStackTrace();
-            Log.d(TAG, "token error :"+e.getMessage());
-        } catch (GoogleAuthException e) {
-            e.printStackTrace();
-            Log.d(TAG, "token error :"+e.getMessage());
         }
     }
 

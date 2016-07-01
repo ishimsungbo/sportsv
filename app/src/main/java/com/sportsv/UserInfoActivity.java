@@ -402,6 +402,7 @@ public class UserInfoActivity extends AppCompatActivity{
                         Log.d(TAG,"***************************");
                     }else{
                         Log.d(TAG,"===========================");
+                        VeteranToast.makeToast(getApplicationContext(),"출석 포인트가 지급 되었습니다",0).show();
                         tx_selfpoint_amount.setText(result.getResult());
                     }
 
@@ -412,7 +413,7 @@ public class UserInfoActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<ServerResult> call, Throwable t) {
-                VeteranToast.makeToast(getApplicationContext(),"실패~~~~~~~",0).show();
+                VeteranToast.makeToast(getApplicationContext(),"실패",0).show();
                 t.printStackTrace();
             }
         });

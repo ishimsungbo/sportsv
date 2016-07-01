@@ -1,8 +1,14 @@
 package com.sportsv;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -10,13 +16,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.sportsv.common.Compare;
+import com.sportsv.common.Initializing;
+import com.sportsv.common.PrefManager;
 import com.sportsv.common.PrefUtil;
+import com.sportsv.dao.FcmTokenService;
+import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.test.TestActivity;
+import com.sportsv.vo.FcmToken;
+import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private User user;
     private PrefUtil prefUtil;
+    private ServerResult serverResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +75,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d(TAG, "onCreate ===========================================================");
+        FirebaseMessaging.getInstance().subscribeToTopic("test");
+
+
+        //초기슬라이딩 화면
+        findViewById(R.id.btn_play_again).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // We normally won't show the welcome slider again in real app
+                // but this is for testing
+                PrefManager prefManager = new PrefManager(getApplicationContext());
+
+                // make first time launch TRUE
+                prefManager.setFirstTimeLaunch(true);
+
+                startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
+                finish();
+            }
+        });
+
+        //초기 정보 셋팅
+        //Initializing initializing = new Initializing(this);
+        //LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver, new IntentFilter("tokenReceiver"));
+
+        String fcmtoken = FirebaseInstanceId.getInstance().getToken();
+
 
     }
 
@@ -88,6 +131,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onStart ===========================================================");
         user = prefUtil.getUser();
         Log.d(TAG,"onStart() : "+user.toString());
+
+        if(!Compare.isEmpty(user.getUseremail())){
+            checkToken(user);
+        }
+
+
     }
 
     @Override
@@ -133,11 +182,65 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
-    @OnClick(R.id.btn_progress)
-    public void btn_progress(){
-        Intent intent = new Intent(this,ProgressActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    @OnClick(R.id.btn_getToken)
+    public void btn_getToken(){
+        Log.d(TAG, "InstanceID token: " + FirebaseInstanceId.getInstance().getToken());
+    }
+
+    //FCM관련 토크값 처리 로직
+    //1. 서버에 토큰값이 있는지 검색
+    //2. 토큰 값이 없다면 최초 실행이므로 DB저장
+    //   --만약 user정보가 있다면 토큰값을 현재 토큰으로 변경을 해준다.
+    //
+
+/*    //FCM 토큰 관련 처리
+    BroadcastReceiver tokenReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String token = intent.getStringExtra("token");
+            if(token != null)
+            {
+                //send token to your server or what you want to do
+                Log.d(TAG,"**************************************************************");
+                Log.d(TAG,"토큰 값은 : " + token);
+                Log.d(TAG,"**************************************************************");
+            }
+
+        }
+    };*/
+
+    private void checkToken(User user){
+
+        FcmToken fcmToken = new FcmToken();
+
+        fcmToken.setFcmtoken(FirebaseInstanceId.getInstance().getToken());
+        fcmToken.setUid(user.getUid());
+        fcmToken.setCommontokenid(user.getCommontokenid());
+
+        FcmTokenService fcmTokenService = ServiceGenerator.createService(FcmTokenService.class,user);
+        final Call<ServerResult> callBack = fcmTokenService.checkToken(fcmToken);
+
+        callBack.enqueue(new Callback<ServerResult>() {
+
+
+            @Override
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
+                serverResult = response.body();
+                Log.d(TAG,"서버 초기 작업은 ? " + serverResult.toString());
+
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor pre = sp.edit();
+                pre.putInt("commontokenid",serverResult.getCount());
+                pre.commit();
+            }
+
+            @Override
+            public void onFailure(Call<ServerResult> call, Throwable t) {
+                serverResult.setCount(0);
+                serverResult.setResult("E");
+                serverResult.setErrorMsg(t.getMessage());
+            }
+        });
     }
 
 }

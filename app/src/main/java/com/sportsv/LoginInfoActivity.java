@@ -18,12 +18,14 @@ import com.bumptech.glide.Glide;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sportsv.common.Auth;
 
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserService;
 import com.sportsv.retropit.ServiceGenerator;
+import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 import java.util.Arrays;
@@ -153,6 +155,8 @@ public class LoginInfoActivity extends AppCompatActivity {
         userVo.setTeampushflag("Y");
         userVo.setApppushflag("Y");
         userVo.setTeamid(0);
+        userVo.setFcmToken(FirebaseInstanceId.getInstance().getToken());
+        //userVo.setCommontokenid();
 
     }
 
@@ -180,15 +184,17 @@ public class LoginInfoActivity extends AppCompatActivity {
         UserService userService = ServiceGenerator.createService(UserService.class);
 
 
-        final Call<Integer> userCre = userService.createUser(user);
+        final Call<ServerResult> userCre = userService.createUser(user);
 
-        userCre.enqueue(new Callback<Integer>() {
+        userCre.enqueue(new Callback<ServerResult>() {
 
             @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
                 try {
 
-                    UID = response.body();
+                    ServerResult serverResult = response.body();
+
+                    UID = serverResult.getCount();
 
                     Log.d(TAG, "서버에서 생성된 아이디는 : " + UID);
 
@@ -211,7 +217,7 @@ public class LoginInfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
+            public void onFailure(Call<ServerResult> call, Throwable t) {
                 Log.d(TAG, "환경 구성 확인 필요 서버와 통신 불가 : " + t.getMessage());
                 t.printStackTrace();
                 dialog.dismiss();

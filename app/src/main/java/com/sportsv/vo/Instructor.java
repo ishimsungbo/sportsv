@@ -10,6 +10,7 @@ public class Instructor {
 
     private int instructorid;
     private String email;
+    private String password;
     private String name;
     private String profile;
     private String description;
@@ -19,11 +20,38 @@ public class Instructor {
     private int pointhistoryid;
     private String feedbackflag;
     private String apppushflag;
-    private String password;
+    private int commontokenid;
     private String creationdate;
     private String change_creationdate;
 
     public Instructor(){}
+
+    public Instructor(int instructorid, String email, String password, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, int commontokenid, String creationdate, String change_creationdate) {
+        this.instructorid = instructorid;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.profile = profile;
+        this.description = description;
+        this.phone = phone;
+        this.location = location;
+        this.teamid = teamid;
+        this.pointhistoryid = pointhistoryid;
+        this.feedbackflag = feedbackflag;
+        this.apppushflag = apppushflag;
+        this.commontokenid = commontokenid;
+        this.creationdate = creationdate;
+        this.change_creationdate = change_creationdate;
+    }
+
+
+    public int getCommontokenid() {
+        return commontokenid;
+    }
+
+    public void setCommontokenid(int commontokenid) {
+        this.commontokenid = commontokenid;
+    }
 
     public int getInstructorid() {
         return instructorid;
@@ -129,11 +157,20 @@ public class Instructor {
         this.creationdate = creationdate;
     }
 
+    public String getChange_creationdate() {
+        return change_creationdate;
+    }
+
+    public void setChange_creationdate(String change_creationdate) {
+        this.change_creationdate = change_creationdate;
+    }
+
     @Override
     public String toString() {
         return "Instructor{" +
                 "instructorid=" + instructorid +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", profile='" + profile + '\'' +
                 ", description='" + description + '\'' +
@@ -143,34 +180,9 @@ public class Instructor {
                 ", pointhistoryid=" + pointhistoryid +
                 ", feedbackflag='" + feedbackflag + '\'' +
                 ", apppushflag='" + apppushflag + '\'' +
-                ", password='" + password + '\'' +
+                ", commontokenid=" + commontokenid +
                 ", creationdate='" + creationdate + '\'' +
                 ", change_creationdate='" + change_creationdate + '\'' +
                 '}';
-    }
-
-    public Instructor(int instructorid, String email, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, String password, String creationdate, String change_creationdate) {
-        this.instructorid = instructorid;
-        this.email = email;
-        this.name = name;
-        this.profile = profile;
-        this.description = description;
-        this.phone = phone;
-        this.location = location;
-        this.teamid = teamid;
-        this.pointhistoryid = pointhistoryid;
-        this.feedbackflag = feedbackflag;
-        this.apppushflag = apppushflag;
-        this.password = password;
-        this.creationdate = creationdate;
-        this.change_creationdate = change_creationdate;
-    }
-
-    public String getChange_creationdate() {
-        return change_creationdate;
-    }
-
-    public void setChange_creationdate(String change_creationdate) {
-        this.change_creationdate = change_creationdate;
     }
 }

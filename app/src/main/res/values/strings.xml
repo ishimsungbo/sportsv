@@ -27,4 +27,28 @@
     <string name="internal_storage">Internal storage</string>
     <string name="title_activity_progress">ProgressActivity</string>
 
+
+    <!--인트로슬라잉-->
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">다음</string>
+    <string name="skip">건너뛰기</string>
+    <string name="start">시작합니다</string>
+
+    <string name="slide_1_title">첫번째 슬라이딩 화면</string>
+    <string name="slide_1_desc">첫번째 콘텐트 설명</string>
+
+    <string name="slide_2_title">두번째 슬라이딩 화면</string>
+    <string name="slide_2_desc">두번째 콘텐트 설명</string>
+
+    <string name="slide_3_title">세번째 슬라이딩 화면</string>
+    <string name="slide_3_desc">세번째 콘텐트 설명</string>
+
+    <string name="slide_4_title">네번째 슬라이딩 화면</string>
+    <string name="slide_4_desc">네번째 콘텐트 설명</string>
+
+    <string name="play_again">슬라이딩초기셋팅</string>
+
+    <!--서버와 통신관련 메세지-->
+    <string name="network_error">인터넷이 연결 또는 서버 점검중입니다</string>
+
 </resources>

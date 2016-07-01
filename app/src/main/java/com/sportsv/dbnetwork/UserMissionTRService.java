@@ -3,13 +3,8 @@ package com.sportsv.dbnetwork;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.sportsv.CustomProgressDialog;
-import com.sportsv.ProgressActivity;
 import com.sportsv.dao.UserMissionService;
 import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.ServerResult;
@@ -20,8 +15,6 @@ import com.sportsv.widget.VeteranToast;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-
 /**
  * Created by sungbo on 2016-06-13.
  */

@@ -15,11 +15,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sportsv.R;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.FeedBackService;
 import com.sportsv.dao.InstructorService;
 import com.sportsv.dao.UserService;
+import com.sportsv.dbnetwork.FcmTokenTRService;
 import com.sportsv.dbnetwork.UserMissionTRService;
 import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.FeedbackHeader;
@@ -252,7 +254,12 @@ public class TestActivity extends AppCompatActivity {
     @OnClick(R.id.btn_feed)
     public void btn_feed() {
 
-        //유저 검색
+        FcmTokenTRService fcmTokenTRService = new FcmTokenTRService();
+
+        int tokenCount = fcmTokenTRService.getTokenCount(FirebaseInstanceId.getInstance().getToken());
+        Log.d(TAG,"값은 : " + tokenCount);
+
+/*        //유저 검색
         UserService userService = ServiceGenerator.createService(UserService.class);
         final Call<User> getUserInfo =userService.getUserTest();
 
@@ -285,7 +292,7 @@ public class TestActivity extends AppCompatActivity {
             public void onFailure(Call<Instructor> call, Throwable t) {
                 t.printStackTrace();
             }
-        });
+        });*/
 
     }
 
