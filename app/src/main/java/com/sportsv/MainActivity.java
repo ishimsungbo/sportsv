@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -185,6 +187,15 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_getToken)
     public void btn_getToken(){
         Log.d(TAG, "InstanceID token: " + FirebaseInstanceId.getInstance().getToken());
+        Log.d(TAG, "기기고유 아이디 " + getDeviceSerialNumber());
+    }
+
+    private static String getDeviceSerialNumber() {
+        try {
+            return (String) Build.class.getField("SERIAL").get(null);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     //FCM관련 토크값 처리 로직
@@ -210,37 +221,6 @@ public class MainActivity extends AppCompatActivity {
     };*/
 
     private void checkToken(User user){
-
-        FcmToken fcmToken = new FcmToken();
-
-        fcmToken.setFcmtoken(FirebaseInstanceId.getInstance().getToken());
-        fcmToken.setUid(user.getUid());
-        fcmToken.setCommontokenid(user.getCommontokenid());
-
-        FcmTokenService fcmTokenService = ServiceGenerator.createService(FcmTokenService.class,user);
-        final Call<ServerResult> callBack = fcmTokenService.checkToken(fcmToken);
-
-        callBack.enqueue(new Callback<ServerResult>() {
-
-
-            @Override
-            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
-                serverResult = response.body();
-                Log.d(TAG,"서버 초기 작업은 ? " + serverResult.toString());
-
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                SharedPreferences.Editor pre = sp.edit();
-                pre.putInt("commontokenid",serverResult.getCount());
-                pre.commit();
-            }
-
-            @Override
-            public void onFailure(Call<ServerResult> call, Throwable t) {
-                serverResult.setCount(0);
-                serverResult.setResult("E");
-                serverResult.setErrorMsg(t.getMessage());
-            }
-        });
     }
 
 }

@@ -26,16 +26,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());  //819984969479 발신자 ID
         //Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
 
-        Log.d(TAG,"타이틀은 : "+remoteMessage.getData().get("message"));
+        Log.d(TAG,"타이틀은 : "+remoteMessage.getData().get("title"));
         Log.d(TAG,"콘텐츠는 : "+remoteMessage.getData().get("content"));
+        Log.d(TAG,"메세지 : "+remoteMessage.getData().get("message"));
 
-
-        sendNotification(remoteMessage.getData().get("title"),remoteMessage.getData().get("message"));
+        sendNotification(remoteMessage.getData().get("title"),
+                        remoteMessage.getData().get("content"),
+                        remoteMessage.getData().get("message")
+        );
 
     }
 
 
-    private void sendNotification(String title,String messageBody) {
+    private void sendNotification(String title,String content,String message) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -44,9 +47,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
+
                 .setContentTitle(title)
-                .setContentText(messageBody)
-                .setSubText("서브텍스트 알림입니다.")
+                .setContentText(content)
+                .setSubText(message)
+
                 .setColor(Color.BLUE) //빽그라운드 컬러
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
@@ -57,5 +62,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
     }
 }

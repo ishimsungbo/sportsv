@@ -2,6 +2,7 @@ package com.sportsv;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,16 +31,9 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-
-        //서버키와 발신자 아이디
-        //AIzaSyAq3dIJEdjsZvydXugP5uPOKnqeLm52UMA
-        //819984969479
-        //토큰값을 유저 가입 // 강사 로그인시 등록시 서버에 등록해준다
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-
-        FcmTokenTRService service = new FcmTokenTRService();
-        service.refreshToken(refreshedToken,0,0);
         Log.d(TAG,"Reresh token = " + refreshedToken);
+
     }
 
 }

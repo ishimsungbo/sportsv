@@ -15,6 +15,7 @@ public class FcmToken {
     private String fcmtoken;
     private int uid;
     private int instructorid;
+    private String serialnumber;
     private String creationdate;
     private String updatedate;
     private String change_creationdate;
@@ -22,17 +23,12 @@ public class FcmToken {
 
     public FcmToken(){}
 
-    public FcmToken(String fcmtoken, int uid, int instructorid) {
-        this.fcmtoken = fcmtoken;
-        this.uid = uid;
-        this.instructorid = instructorid;
-    }
-
-    public FcmToken(int commontokenid, String fcmtoken, int uid, int instructorid, String creationdate, String updatedate, String change_creationdate, String change_updatedate) {
+    public FcmToken(int commontokenid, String fcmtoken, int uid, int instructorid, String serialnumber, String creationdate, String updatedate, String change_creationdate, String change_updatedate) {
         this.commontokenid = commontokenid;
         this.fcmtoken = fcmtoken;
         this.uid = uid;
         this.instructorid = instructorid;
+        this.serialnumber = serialnumber;
         this.creationdate = creationdate;
         this.updatedate = updatedate;
         this.change_creationdate = change_creationdate;
@@ -103,6 +99,14 @@ public class FcmToken {
         this.change_updatedate = change_updatedate;
     }
 
+    public String getSerialnumber() {
+        return serialnumber;
+    }
+
+    public void setSerialnumber(String serialnumber) {
+        this.serialnumber = serialnumber;
+    }
+
     @Override
     public String toString() {
         return "FcmToken{" +
@@ -110,6 +114,7 @@ public class FcmToken {
                 ", fcmtoken='" + fcmtoken + '\'' +
                 ", uid=" + uid +
                 ", instructorid=" + instructorid +
+                ", serialnumber='" + serialnumber + '\'' +
                 ", creationdate='" + creationdate + '\'' +
                 ", updatedate='" + updatedate + '\'' +
                 ", change_creationdate='" + change_creationdate + '\'' +

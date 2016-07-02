@@ -18,16 +18,6 @@ import retrofit2.http.Query;
  */
 public interface FcmTokenService {
 
-    @POST("/all/saveFcmToken")
-    Call<ServerResult> saveFcmToken(@Body FcmToken fcmToken);
 
-    @POST("/all/getFcmTokenCount")
-    Call<ServerResult> getFcmTokenCount(@Body FcmToken fcmToken);
-
-    @POST("/all/updateFcmToken")
-    Call<ServerResult> updateFcmToken(@Body FcmToken fcmToken);
-
-    @POST("/api/user/checkToken")
-    Call<ServerResult> checkToken(@Body FcmToken fcmToken);
 
 }

@@ -218,7 +218,6 @@ public class JoinActivity extends AppCompatActivity {
 
                     if (UID == 0) {
                         Log.d(TAG, "이미 회원으로 가입 되어 있는 메일주소 : " + UID);
-
                         VeteranToast.makeToast(getApplicationContext(), user.getUseremail() +" 은 이미 가입되어 있는 주소입니다",Toast.LENGTH_SHORT).show();
                     } else {
                         userVo.setUid(UID);

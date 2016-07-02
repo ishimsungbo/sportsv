@@ -205,8 +205,6 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_webview)
     public void btn_webview(){
-
-
         /*
         1.인텐트 방식으로 웹 브라우저 호출. 독립적으로 실행하기 때문에 안드로이드 컨트룰 불가능
         //String url ="selphone://post_detail?post_id=10"; get 방식으로 데이터에 맞는 url를 호출할 수 있다.
@@ -216,9 +214,6 @@ public class TestActivity extends AppCompatActivity {
         intent.setPackage("com.android.chrome");
         startActivityForResult(intent, RESULT_WEBSITE);
         */
-
-
-
     }
 
     @Override
@@ -254,12 +249,9 @@ public class TestActivity extends AppCompatActivity {
     @OnClick(R.id.btn_feed)
     public void btn_feed() {
 
-        FcmTokenTRService fcmTokenTRService = new FcmTokenTRService();
 
-        int tokenCount = fcmTokenTRService.getTokenCount(FirebaseInstanceId.getInstance().getToken());
-        Log.d(TAG,"값은 : " + tokenCount);
-
-/*        //유저 검색
+        /*
+        //유저 검색
         UserService userService = ServiceGenerator.createService(UserService.class);
         final Call<User> getUserInfo =userService.getUserTest();
 
