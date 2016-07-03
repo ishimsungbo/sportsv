@@ -37,7 +37,6 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by sungbo on 2016-06-06.
@@ -141,6 +140,7 @@ public class JoinActivity extends AppCompatActivity {
                     userVo.setPassword(tx_edit_user_password.getText().toString());
                     userVo.setUsername(edit_user_name.getText().toString());
                     userVo.setFcmToken(FirebaseInstanceId.getInstance().getToken());
+                    userVo.setSerialnumber(Common.getDeviceSerialNumber());
                     userCreate(userVo);
 
                 }else{
@@ -221,7 +221,7 @@ public class JoinActivity extends AppCompatActivity {
                         VeteranToast.makeToast(getApplicationContext(), user.getUseremail() +" 은 이미 가입되어 있는 주소입니다",Toast.LENGTH_SHORT).show();
                     } else {
                         userVo.setUid(UID);
-
+                        userVo.setCommontokenid(serverResult.getGetid());
                         Log.d(TAG, "생성된 유저아이디는  : " + UID);
                         prefUtil.saveUser(userVo);
 

@@ -9,6 +9,7 @@ public class ServerResult {
     private int count;
     private String result;
     private String errorMsg;
+    private int getid;
 
     public ServerResult(){}
 
@@ -21,6 +22,13 @@ public class ServerResult {
         this.count = count;
         this.result = result;
         this.errorMsg = errorMsg;
+    }
+
+    public ServerResult(int count, String result, String errorMsg, int getid) {
+        this.count = count;
+        this.result = result;
+        this.errorMsg = errorMsg;
+        this.getid = getid;
     }
 
     public int getCount() {
@@ -47,12 +55,21 @@ public class ServerResult {
         this.errorMsg = errorMsg;
     }
 
+    public int getGetid() {
+        return getid;
+    }
+
+    public void setGetid(int getid) {
+        this.getid = getid;
+    }
+
     @Override
     public String toString() {
         return "ServerResult{" +
                 "count=" + count +
                 ", result='" + result + '\'' +
                 ", errorMsg='" + errorMsg + '\'' +
+                ", getid=" + getid +
                 '}';
     }
 }

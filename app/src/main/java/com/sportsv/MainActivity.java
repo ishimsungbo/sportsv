@@ -3,25 +3,17 @@ package com.sportsv;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
-import com.sportsv.common.Initializing;
 import com.sportsv.common.PrefManager;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.FcmTokenService;
@@ -134,11 +126,6 @@ public class MainActivity extends AppCompatActivity {
         user = prefUtil.getUser();
         Log.d(TAG,"onStart() : "+user.toString());
 
-        if(!Compare.isEmpty(user.getUseremail())){
-            checkToken(user);
-        }
-
-
     }
 
     @Override
@@ -187,16 +174,10 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_getToken)
     public void btn_getToken(){
         Log.d(TAG, "InstanceID token: " + FirebaseInstanceId.getInstance().getToken());
-        Log.d(TAG, "기기고유 아이디 " + getDeviceSerialNumber());
+        Log.d(TAG, "기기고유 아이디 " + Common.getDeviceSerialNumber());
     }
 
-    private static String getDeviceSerialNumber() {
-        try {
-            return (String) Build.class.getField("SERIAL").get(null);
-        } catch (Exception ignored) {
-            return null;
-        }
-    }
+
 
     //FCM관련 토크값 처리 로직
     //1. 서버에 토큰값이 있는지 검색
@@ -204,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     //   --만약 user정보가 있다면 토큰값을 현재 토큰으로 변경을 해준다.
     //
 
-/*    //FCM 토큰 관련 처리
+    //FCM 토큰 관련 처리
     BroadcastReceiver tokenReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -215,12 +196,64 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG,"**************************************************************");
                 Log.d(TAG,"토큰 값은 : " + token);
                 Log.d(TAG,"**************************************************************");
+
+                FcmToken fcmToken = new FcmToken();
+                fcmToken.setSerialnumber(Common.getDeviceSerialNumber());
+                fcmToken.setFcmtoken(token);
+                fcmToken.setUid(user.getUid());
+                fcmToken.setCommontokenid(user.getCommontokenid());
+
+                FcmTokenService fcmTokenService = ServiceGenerator.createService(FcmTokenService.class);
+                final Call<ServerResult> call = fcmTokenService.saveToken(fcmToken);
+
+                call.enqueue(new Callback<ServerResult>() {
+                    @Override
+                    public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
+                        ServerResult serverResult = response.body();
+                        Log.d(TAG,"정상정으로 생성되었습니다." + serverResult.toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ServerResult> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+
             }
 
         }
-    };*/
+    };
 
-    private void checkToken(User user){
+
+
+    //팝업 뛰우기
+    @OnClick(R.id.btn_pop)
+    public void btn_pop(){
+        //토큰갱신테스트
+        /*
+        FcmToken fcmToken = new FcmToken();
+        fcmToken.setSerialnumber(Common.getDeviceSerialNumber());
+        fcmToken.setFcmtoken(FirebaseInstanceId.getInstance().getToken());
+        fcmToken.setUid(user.getUid());
+        fcmToken.setCommontokenid(user.getCommontokenid());
+        fcmToken.setTranType("REFRESH");
+
+        FcmTokenService fcmTokenService = ServiceGenerator.createService(FcmTokenService.class);
+        final Call<ServerResult> call = fcmTokenService.saveToken(fcmToken);
+
+        call.enqueue(new Callback<ServerResult>() {
+            @Override
+            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
+                ServerResult serverResult = response.body();
+                Log.d(TAG,"정상정으로 생성되었습니다." + serverResult.toString());
+            }
+
+            @Override
+            public void onFailure(Call<ServerResult> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        */
     }
 
 }

@@ -18,6 +18,7 @@ public class User {
 	private String teampushflag;
 	private int teamid;
 	private int commontokenid;
+	private String serialnumber;
 	private String creationdate;
 	private String change_creationdate;
 
@@ -32,7 +33,7 @@ public class User {
 		this.useremail = useremail;
 	}
 
-	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, int commontokenid, String creationdate, String change_creationdate, String fcmToken) {
+	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, int commontokenid, String serialnumber, String creationdate, String change_creationdate, String fcmToken) {
 		this.uid = uid;
 		this.useremail = useremail;
 		this.username = username;
@@ -48,6 +49,7 @@ public class User {
 		this.teampushflag = teampushflag;
 		this.teamid = teamid;
 		this.commontokenid = commontokenid;
+		this.serialnumber = serialnumber;
 		this.creationdate = creationdate;
 		this.change_creationdate = change_creationdate;
 		this.fcmToken = fcmToken;
@@ -198,6 +200,14 @@ public class User {
 		this.commontokenid = commontokenid;
 	}
 
+	public String getSerialnumber() {
+		return serialnumber;
+	}
+
+	public void setSerialnumber(String serialnumber) {
+		this.serialnumber = serialnumber;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -216,6 +226,7 @@ public class User {
 				", teampushflag='" + teampushflag + '\'' +
 				", teamid=" + teamid +
 				", commontokenid=" + commontokenid +
+				", serialnumber='" + serialnumber + '\'' +
 				", creationdate='" + creationdate + '\'' +
 				", change_creationdate='" + change_creationdate + '\'' +
 				", fcmToken='" + fcmToken + '\'' +

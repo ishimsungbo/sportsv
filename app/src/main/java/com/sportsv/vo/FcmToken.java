@@ -1,8 +1,5 @@
 package com.sportsv.vo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by sungbo on 2016-06-30.
  * 유저 및 강사들의 FCM 토큰값 안드로이드 기기당 1개씩
@@ -21,9 +18,11 @@ public class FcmToken {
     private String change_creationdate;
     private String change_updatedate;
 
+    private String tranType;
+
     public FcmToken(){}
 
-    public FcmToken(int commontokenid, String fcmtoken, int uid, int instructorid, String serialnumber, String creationdate, String updatedate, String change_creationdate, String change_updatedate) {
+    public FcmToken(int commontokenid, String fcmtoken, int uid, int instructorid, String serialnumber, String creationdate, String updatedate, String change_creationdate, String change_updatedate, String tranType) {
         this.commontokenid = commontokenid;
         this.fcmtoken = fcmtoken;
         this.uid = uid;
@@ -33,6 +32,7 @@ public class FcmToken {
         this.updatedate = updatedate;
         this.change_creationdate = change_creationdate;
         this.change_updatedate = change_updatedate;
+        this.tranType = tranType;
     }
 
     public int getCommontokenid() {
@@ -107,6 +107,14 @@ public class FcmToken {
         this.serialnumber = serialnumber;
     }
 
+    public String getTranType() {
+        return tranType;
+    }
+
+    public void setTranType(String tranType) {
+        this.tranType = tranType;
+    }
+
     @Override
     public String toString() {
         return "FcmToken{" +
@@ -119,6 +127,7 @@ public class FcmToken {
                 ", updatedate='" + updatedate + '\'' +
                 ", change_creationdate='" + change_creationdate + '\'' +
                 ", change_updatedate='" + change_updatedate + '\'' +
+                ", tranType='" + tranType + '\'' +
                 '}';
     }
 }

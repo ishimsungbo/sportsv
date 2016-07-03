@@ -21,6 +21,7 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sportsv.common.Auth;
 
+import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserService;
@@ -155,9 +156,8 @@ public class LoginInfoActivity extends AppCompatActivity {
         userVo.setTeampushflag("Y");
         userVo.setApppushflag("Y");
         userVo.setTeamid(0);
+        userVo.setSerialnumber(Common.getDeviceSerialNumber());
         userVo.setFcmToken(FirebaseInstanceId.getInstance().getToken());
-        //userVo.setCommontokenid();
-
     }
 
 
@@ -199,7 +199,7 @@ public class LoginInfoActivity extends AppCompatActivity {
                     Log.d(TAG, "서버에서 생성된 아이디는 : " + UID);
 
                     userVo.setUid(UID);
-
+                    userVo.setCommontokenid(serverResult.getGetid());
                     prefUtil.saveUser(userVo);
 
                     dialog.dismiss();

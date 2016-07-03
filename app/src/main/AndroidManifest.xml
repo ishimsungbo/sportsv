@@ -71,6 +71,7 @@
             android:name=".youtubeupload.StartUploadActivity"
             android:screenOrientation="portrait" />
 
+
         <service
             android:name=".youtubeupload.UploadService"
             android:exported="true" />
