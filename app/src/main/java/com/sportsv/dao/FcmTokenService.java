@@ -15,4 +15,7 @@ public interface FcmTokenService {
     @POST("/all/saveToken")
     public Call<ServerResult> saveToken(@Body FcmToken fcmToken);
 
+    @POST("/all/updateToken")
+    public Call<ServerResult> updateToken(@Body FcmToken fcmToken);
+
 }

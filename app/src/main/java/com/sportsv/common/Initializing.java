@@ -1,9 +1,6 @@
 package com.sportsv.common;
 
 import android.content.Context;
-import android.util.Log;
-
-import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Created by sungbo on 2016-06-30.
@@ -14,8 +11,6 @@ public class Initializing {
 
     private static final String TAG = "Initializing";
     private Context context;
-
-
 
     public Initializing(Context context) {
         this.context = context;

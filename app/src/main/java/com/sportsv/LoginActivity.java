@@ -41,7 +41,6 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -108,9 +107,11 @@ public class LoginActivity extends AppCompatActivity {
         //카카오세션 오픈
         kakaoCallback = new SessionCallback();
         Session.getCurrentSession().addCallback(kakaoCallback);
+
         if(!Session.getCurrentSession().checkAndImplicitOpen()){
             Session.getCurrentSession().open(AuthType.KAKAO_TALK_EXCLUDE_NATIVE_LOGIN, LoginActivity.this);
         }
+
         Log.d(TAG, "카카오 로그인 시도");
     }
 
@@ -371,6 +372,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart() ========================================");
+        Session.getCurrentSession().removeCallback(kakaoCallback);
     }
 
     @Override

@@ -111,9 +111,6 @@ public class JoinActivity extends AppCompatActivity {
                 }
             }
         });
-
-        fcmTokenTRService = new FcmTokenTRService();
-
     }
 
     @OnClick(R.id.btn_sjoin)

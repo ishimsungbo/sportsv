@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.sportsv.vo.Instructor;
 import com.sportsv.vo.User;
 
 
@@ -22,6 +23,26 @@ public class PrefUtil {
         editor.clear();
         editor.apply();
     }
+
+    public void saveIns(Instructor ins){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor pre = sp.edit();
+
+        pre.putInt("uid", ins.getInstructorid());
+
+        pre.commit();
+    }
+
+    public Instructor getIns(){
+        Instructor instructor = new Instructor();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        instructor.setInstructorid(sp.getInt("instructorid", 0));
+
+        return instructor;
+    }
+
+    /**********************************************************************************/
 
     public void saveUser(User user){
 
@@ -68,6 +89,19 @@ public class PrefUtil {
         user.setPassword(sp.getString("password", null));
         user.setCommontokenid(sp.getInt("commontokenid", 0));
         return user;
+    }
+
+    public void saveFcmToken(String token){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor pre = sp.edit();
+        pre.putString("fcmtoken",token);
+        pre.commit();
+    }
+
+    public String getFcmToken(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        String preFcmToken = sp.getString("fcmtoken", null);
+        return preFcmToken;
     }
 
 }

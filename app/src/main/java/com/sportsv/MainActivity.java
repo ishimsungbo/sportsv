@@ -1,7 +1,5 @@
 package com.sportsv;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,26 +14,23 @@ import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefManager;
 import com.sportsv.common.PrefUtil;
-import com.sportsv.dao.FcmTokenService;
-import com.sportsv.retropit.ServiceGenerator;
+import com.sportsv.dbnetwork.FcmTokenTRService;
 import com.sportsv.test.TestActivity;
 import com.sportsv.vo.FcmToken;
-import com.sportsv.vo.ServerResult;
+import com.sportsv.vo.Instructor;
 import com.sportsv.vo.User;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
     private User user;
+    private Instructor instructor;
     private PrefUtil prefUtil;
-    private ServerResult serverResult;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         prefUtil = new PrefUtil(this);
 
         user = prefUtil.getUser();
+        instructor = prefUtil.getIns();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -69,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d(TAG, "onCreate ===========================================================");
-        FirebaseMessaging.getInstance().subscribeToTopic("test");
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
 
         //초기슬라이딩 화면
@@ -88,13 +84,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //초기 정보 셋팅
-        //Initializing initializing = new Initializing(this);
+        //브로드 캐스트 수신 받는 함수 동적으로...
         //LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver, new IntentFilter("tokenReceiver"));
-
-        String fcmtoken = FirebaseInstanceId.getInstance().getToken();
-
-
     }
 
 
@@ -124,8 +115,31 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d(TAG, "onStart ===========================================================");
         user = prefUtil.getUser();
-        Log.d(TAG,"onStart() : "+user.toString());
+        instructor = prefUtil.getIns();
 
+        Log.d(TAG,"onStart() : "+user.toString());
+        Log.d(TAG,"onStart() : "+instructor.toString());
+
+        String shToken = prefUtil.getFcmToken();
+
+        if(Compare.isEmpty(shToken)){
+            //토큰이 없다면 프리퍼런스/DB에 저장한다
+            prefUtil.saveFcmToken(FirebaseInstanceId.getInstance().getToken());
+        }else{
+            if(!shToken.equals(FirebaseInstanceId.getInstance().getToken())){
+
+                //디비의 토큰을 일괄로 업데이트 한다
+                FcmToken token = new FcmToken();
+                token.setSerialnumber(Common.getDeviceSerialNumber());
+                token.setFcmtoken(shToken);
+                FcmTokenTRService service = new FcmTokenTRService(this);
+                service.updateToken(token);
+
+                //쉐어프리퍼런스 토큰값을 변경
+                prefUtil.saveFcmToken(FirebaseInstanceId.getInstance().getToken());
+            }
+
+        }
     }
 
     @Override
@@ -177,7 +191,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "기기고유 아이디 " + Common.getDeviceSerialNumber());
     }
 
+    //팝업 뛰우기
+    @OnClick(R.id.btn_pop)
+    public void btn_pop(){
 
+    }
 
     //FCM관련 토크값 처리 로직
     //1. 서버에 토큰값이 있는지 검색
@@ -186,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
     //
 
     //FCM 토큰 관련 처리
-    BroadcastReceiver tokenReceiver = new BroadcastReceiver() {
+/*    BroadcastReceiver tokenReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String token = intent.getStringExtra("token");
@@ -223,37 +241,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
-
-
-
-    //팝업 뛰우기
-    @OnClick(R.id.btn_pop)
-    public void btn_pop(){
-        //토큰갱신테스트
-        /*
-        FcmToken fcmToken = new FcmToken();
-        fcmToken.setSerialnumber(Common.getDeviceSerialNumber());
-        fcmToken.setFcmtoken(FirebaseInstanceId.getInstance().getToken());
-        fcmToken.setUid(user.getUid());
-        fcmToken.setCommontokenid(user.getCommontokenid());
-        fcmToken.setTranType("REFRESH");
-
-        FcmTokenService fcmTokenService = ServiceGenerator.createService(FcmTokenService.class);
-        final Call<ServerResult> call = fcmTokenService.saveToken(fcmToken);
-
-        call.enqueue(new Callback<ServerResult>() {
-            @Override
-            public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
-                ServerResult serverResult = response.body();
-                Log.d(TAG,"정상정으로 생성되었습니다." + serverResult.toString());
-            }
-
-            @Override
-            public void onFailure(Call<ServerResult> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-        */
-    }
+    */
 
 }
