@@ -1,9 +1,11 @@
 package com.sportsv.dao;
 
 import com.sportsv.vo.Instructor;
+import com.sportsv.vo.ServerResult;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -11,7 +13,10 @@ import retrofit2.http.POST;
  */
 public interface InstructorService {
 
-    @POST("/ins/instructor/getInstrutor")
-    Call<Instructor> getInstrutor(@Body Instructor ins);
 
+    @POST("/all/ins/saveInstructor")
+    Call<ServerResult> saveInstructor(@Body Instructor ins);
+
+    @GET("/api/ins/insLogin")
+    Call<ServerResult> insLogin();
 }

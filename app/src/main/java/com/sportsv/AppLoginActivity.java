@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
-
 import com.sportsv.dao.UserService;
 import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.ServerResult;
@@ -26,7 +25,6 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 
 /**
@@ -83,6 +81,8 @@ public class AppLoginActivity extends AppCompatActivity {
             layoutPassword.setError("비밀번호는 5자 이상 입력해주세요");
             return;
         }else{
+            layoutUserEmail.setError(null);
+            layoutPassword.setError(null);
 
             parameterUser.setPassword(edit_password_lg.getText().toString());
             parameterUser.setUseremail(edit_email_lg.getText().toString());

@@ -23,7 +23,6 @@ import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dao.UserService;
-import com.sportsv.dbnetwork.FcmTokenTRService;
 import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
@@ -50,7 +49,7 @@ public class JoinActivity extends AppCompatActivity {
     TextView tx_sgoogleid;
 
     @Bind(R.id.edit_user_name)
-    TextView edit_user_name;
+    EditText edit_user_name;
 
     @Bind(R.id.edit_user_email)
     EditText tx_edit_user_email;
@@ -62,7 +61,7 @@ public class JoinActivity extends AppCompatActivity {
     CheckBox joincheckBox;
 
     //구글 아이디 선택하기
-    GoogleAccountCredential credential;
+    private GoogleAccountCredential credential;
     private static final int REQUEST_ACCOUNT_PICKER = 2;
     private static final String TAG = "JoinActivity";
 
@@ -70,9 +69,7 @@ public class JoinActivity extends AppCompatActivity {
     private PrefUtil prefUtil;
     int UID;
 
-    String JoinCheck="N";
-
-    private FcmTokenTRService fcmTokenTRService;
+    private String JoinCheck="N";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,9 +150,9 @@ public class JoinActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_scancel)
     public void btn_scancel(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        //Intent intent = new Intent(this, MainActivity.class);
+        //startActivity(intent);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         finish();
     }
 

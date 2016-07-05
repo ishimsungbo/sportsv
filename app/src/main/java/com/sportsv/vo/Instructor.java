@@ -1,8 +1,5 @@
 package com.sportsv.vo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by sungbo on 2016-06-01.
  */
@@ -21,12 +18,14 @@ public class Instructor {
     private String feedbackflag;
     private String apppushflag;
     private int commontokenid;
+    private String serialnumber;
+    private String fcmtoken;
     private String creationdate;
     private String change_creationdate;
 
     public Instructor(){}
 
-    public Instructor(int instructorid, String email, String password, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, int commontokenid, String creationdate, String change_creationdate) {
+    public Instructor(int instructorid, String email, String password, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, int commontokenid, String serialnumber, String fcmtoken, String creationdate, String change_creationdate) {
         this.instructorid = instructorid;
         this.email = email;
         this.password = password;
@@ -40,10 +39,11 @@ public class Instructor {
         this.feedbackflag = feedbackflag;
         this.apppushflag = apppushflag;
         this.commontokenid = commontokenid;
+        this.serialnumber = serialnumber;
+        this.fcmtoken = fcmtoken;
         this.creationdate = creationdate;
         this.change_creationdate = change_creationdate;
     }
-
 
     public int getCommontokenid() {
         return commontokenid;
@@ -165,6 +165,22 @@ public class Instructor {
         this.change_creationdate = change_creationdate;
     }
 
+    public String getSerialnumber() {
+        return serialnumber;
+    }
+
+    public void setSerialnumber(String serialnumber) {
+        this.serialnumber = serialnumber;
+    }
+
+    public String getFcmtoken() {
+        return fcmtoken;
+    }
+
+    public void setFcmtoken(String fcmtoken) {
+        this.fcmtoken = fcmtoken;
+    }
+
     @Override
     public String toString() {
         return "Instructor{" +
@@ -181,6 +197,8 @@ public class Instructor {
                 ", feedbackflag='" + feedbackflag + '\'' +
                 ", apppushflag='" + apppushflag + '\'' +
                 ", commontokenid=" + commontokenid +
+                ", serialnumber='" + serialnumber + '\'' +
+                ", fcmtoken='" + fcmtoken + '\'' +
                 ", creationdate='" + creationdate + '\'' +
                 ", change_creationdate='" + change_creationdate + '\'' +
                 '}';

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout style="@style/box_wrap"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <ImageView
+            android:id="@+id/ins_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:onClick="imageOnClick"
+            android:src="@drawable/userimage"
+            android:layout_gravity="center"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_ins_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        android:textSize="20sp"
+        />
+
+
+    <Button
+        android:id="@+id/ins_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="기타설정"
+        android:textSize="20sp"
+        />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+    </ScrollView>
+
+
+
+
+</LinearLayout>

@@ -1,8 +1,12 @@
 package com.sportsv;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,6 +24,8 @@ import com.sportsv.vo.FcmToken;
 import com.sportsv.vo.Instructor;
 import com.sportsv.vo.User;
 
+import java.security.MessageDigest;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -30,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private User user;
     private Instructor instructor;
     private PrefUtil prefUtil;
+
+    private String hasykey=null;
 
 
     @Override
@@ -86,27 +94,48 @@ public class MainActivity extends AppCompatActivity {
 
         //브로드 캐스트 수신 받는 함수 동적으로...
         //LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver, new IntentFilter("tokenReceiver"));
+         getAppKeyHash();
+        Log.d(TAG,"해쉬키는 : " + hasykey);
     }
 
 
     @OnClick(R.id.btn_move)
     public void btn_move(){
 
-        if(Compare.isEmpty(user.getUseremail())){
+        if(Compare.isEmpty(user.getUseremail()) && Compare.isEmpty(instructor.getEmail())
+                ) {
+            Log.d(TAG,"가입 페이지로 이동합니다");
+            Intent login_intent = new Intent(getApplicationContext(), AppJoinActivity.class);
+            startActivity(login_intent);
+        }else{
 
+            if(!Compare.isEmpty(user.getUseremail())){
+                Log.d(TAG,"유저 입니다.");
+                Intent login_intent = new Intent(this,UserInfoActivity.class);
+                startActivity(login_intent);
+            }
+
+            if(!Compare.isEmpty(instructor.getEmail())){
+                Log.d(TAG,"강사 입니다");
+                Intent login_intent = new Intent(this,InsInfoActivity.class);
+                startActivity(login_intent);
+            }
+
+        }
+
+        /*
+        if(Compare.isEmpty(user.getUseremail())){
             Log.d(TAG, "유저 정보가 없다");
             Intent login_intent = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(login_intent);
             overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-
         }else{
-
             Log.d(TAG,"유저 정보가 있다 : "+user.getUsername());
             Intent login_intent = new Intent(this,UserInfoActivity.class);
             startActivity(login_intent);
             overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-
         }
+        */
     }
 
 
@@ -194,7 +223,6 @@ public class MainActivity extends AppCompatActivity {
     //팝업 뛰우기
     @OnClick(R.id.btn_pop)
     public void btn_pop(){
-
     }
 
     //FCM관련 토크값 처리 로직
@@ -242,5 +270,23 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     */
+
+    private void getAppKeyHash() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                Log.d("Hash key", something);
+                hasykey=something;
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.e("name not found", e.toString());
+        }
+    }
+
 
 }

@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sportsv.BuildConfig;
 import com.sportsv.common.Common;
 import com.sportsv.vo.Instructor;
 import com.sportsv.vo.User;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -53,6 +51,7 @@ public class ServiceGenerator {
     //회원 및 인증이 필요한 일반 유저용
     public static <S> S createService(Class<S> serviceClass, User user) {
 
+        Log.d(TAG,"유저 인증을 합니다");
 
         if (user.getUseremail() != null && user.getPassword() != null) {
 
@@ -120,8 +119,10 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
-    //회원 및 인증이 필요한 일반 유저용
+    //강사 인증용
     public static <S> S createService(Class<S> serviceClass, Instructor instructor) {
+
+        Log.d(TAG,"강사 인증을 합니다");
 
         String adminEmail = instructor.getEmail();
         String adminPwd   = instructor.getPassword();

@@ -28,7 +28,20 @@ public class PrefUtil {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor pre = sp.edit();
 
-        pre.putInt("uid", ins.getInstructorid());
+        pre.putInt("instructorid", ins.getInstructorid());
+        pre.putString("ins_email",ins.getEmail());
+        pre.putString("ins_name",ins.getName());
+        pre.putString("ins_password",ins.getPassword());
+        pre.putString("ins_profile",ins.getProfile());
+        pre.putString("ins_description",ins.getDescription());
+        pre.putString("ins_phone", ins.getPhone());
+        pre.putInt("ins_location", ins.getLocation());
+        pre.putInt("ins_teamid", ins.getTeamid());
+        pre.putString("ins_feedbackflag",ins.getFeedbackflag());
+        pre.putString("appushflag",ins.getApppushflag());
+        pre.putString("serialnumber",ins.getSerialnumber());
+        pre.putInt("commontokenid",ins.getCommontokenid());
+        pre.putInt("pointhistoryid",ins.getPointhistoryid());
 
         pre.commit();
     }
@@ -38,6 +51,19 @@ public class PrefUtil {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
 
         instructor.setInstructorid(sp.getInt("instructorid", 0));
+        instructor.setEmail(sp.getString("ins_email",null));
+        instructor.setName(sp.getString("ins_name",null));
+        instructor.setPassword(sp.getString("ins_password",null));
+        instructor.setProfile(sp.getString("ins_profile",null));
+        instructor.setDescription(sp.getString("ins_description",null));
+        instructor.setPhone(sp.getString("ins_phone",null));
+        instructor.setLocation(sp.getInt("ins_location",0));
+        instructor.setTeamid(sp.getInt("ins_teamid",0));
+        instructor.setFeedbackflag(sp.getString("ins_feedbackflag",null));
+        instructor.setApppushflag(sp.getString("appushflag",null));
+        instructor.setSerialnumber(sp.getString("serialnumber",null));
+        instructor.setCommontokenid(sp.getInt("commontokenid",0));
+        instructor.setPointhistoryid(sp.getInt("pointhistoryid",0));
 
         return instructor;
     }
