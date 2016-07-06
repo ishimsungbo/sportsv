@@ -1,4 +1,4 @@
-package com.sportsv.serverservice;
+package com.sportsv.retropit;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,6 +12,7 @@ import okhttp3.Response;
 
 /**
  * Created by sungbo on 2016-06-20.
+ * * 쿠키 인터셉터
  */
 public class ReceivedCookiesInterceptor implements Interceptor{
 

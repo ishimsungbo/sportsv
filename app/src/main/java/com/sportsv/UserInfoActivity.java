@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -27,24 +28,22 @@ import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.common.SettingActivity;
 import com.sportsv.dao.PointService;
-import com.sportsv.dao.UserService;
 import com.sportsv.dbnetwork.PointQueryService;
 import com.sportsv.retropit.ServiceGenerator;
-import com.sportsv.serverservice.FileUploadService;
+import com.sportsv.serverservice.UserFileUploadService;
 import com.sportsv.vo.CpBalanceHeader;
 import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.SpBalanceHeader;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,6 +52,7 @@ import retrofit2.Response;
 
 /**
  * Created by sungbo on 2016-06-03.
+ * 유저 정보
  */
 public class UserInfoActivity extends AppCompatActivity{
 
@@ -347,14 +347,14 @@ public class UserInfoActivity extends AppCompatActivity{
             directory_SmartWheel.mkdir();
 
         //서버에 파일을 업로드 합니다
-        String profileimgurl = Common.SERVER_IMGFILEADRESS + fileName;
+        String profileimgurl = Common.SERVER_USER_IMGFILEADRESS + fileName;
         String StrUid = String.valueOf(user.getUid());
 
         //유저 아이디
         //확장자를 포함한 파일명
         //확장자를 포함한 파일의 위치+파일명
 
-        new FileUploadService(StrUid,fileName,RealFilePath,user,this).execute();
+        new UserFileUploadService(StrUid,fileName,RealFilePath,user,this).execute();
 
 
         //유저사진을 쉐어퍼런스에 저장해준다(업데이트)

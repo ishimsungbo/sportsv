@@ -29,18 +29,22 @@ public class ServiceGenerator {
 
     private static okhttp3.OkHttpClient.Builder httpClient = new okhttp3.OkHttpClient.Builder();
 
-    static Gson gson = new GsonBuilder().setLenient().create();
+    private static Gson gson = new GsonBuilder().setLenient().create();
+
+    public ServiceGenerator() {}
 
 
-    private static Retrofit.Builder builder =
-            new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-            ;
 
 
     //신규가입 및 인증 없이 서버결과 조회
     public static <S> S createService(Class<S> serviceClass) {
+
+         Retrofit.Builder builder =
+                new Retrofit.Builder()
+                        .baseUrl(API_BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                ;
+
         Retrofit retrofit = builder.build();
 
         Log.d(TAG,"레트로핏 서비스 호출(범용) =======================================");
@@ -51,7 +55,13 @@ public class ServiceGenerator {
     //회원 및 인증이 필요한 일반 유저용
     public static <S> S createService(Class<S> serviceClass, User user) {
 
-        Log.d(TAG,"유저 인증을 합니다");
+        Retrofit.Builder builder =
+                new Retrofit.Builder()
+                        .baseUrl(API_BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                ;
+
+        Log.d(TAG,"레트로핏 서비스 호출(유저인증용) =======================================");
 
         if (user.getUseremail() != null && user.getPassword() != null) {
 
@@ -112,7 +122,6 @@ public class ServiceGenerator {
             }
         });
         */
-        Log.d(TAG,"레트로핏 서비스 호출(유저용) =======================================");
 
         okhttp3.OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();
@@ -122,7 +131,13 @@ public class ServiceGenerator {
     //강사 인증용
     public static <S> S createService(Class<S> serviceClass, Instructor instructor) {
 
-        Log.d(TAG,"강사 인증을 합니다");
+        Retrofit.Builder builder =
+                new Retrofit.Builder()
+                        .baseUrl(API_BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                ;
+
+        Log.d(TAG,"레트로핏 서비스 호출(강사인증용) =======================================");
 
         String adminEmail = instructor.getEmail();
         String adminPwd   = instructor.getPassword();
@@ -147,7 +162,6 @@ public class ServiceGenerator {
                 }
             });
 
-        Log.d(TAG,"레트로핏 서비스 호출(강사용) =======================================");
 
         okhttp3.OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();

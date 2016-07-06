@@ -31,6 +31,7 @@ public class PrefUtil {
         pre.putInt("instructorid", ins.getInstructorid());
         pre.putString("ins_email",ins.getEmail());
         pre.putString("ins_name",ins.getName());
+        pre.putString("ins_profileimgurl",ins.getProfileimgurl());
         pre.putString("ins_password",ins.getPassword());
         pre.putString("ins_profile",ins.getProfile());
         pre.putString("ins_description",ins.getDescription());
@@ -43,6 +44,7 @@ public class PrefUtil {
         pre.putInt("commontokenid",ins.getCommontokenid());
         pre.putInt("pointhistoryid",ins.getPointhistoryid());
 
+
         pre.commit();
     }
 
@@ -52,6 +54,7 @@ public class PrefUtil {
 
         instructor.setInstructorid(sp.getInt("instructorid", 0));
         instructor.setEmail(sp.getString("ins_email",null));
+        instructor.setProfileimgurl(sp.getString("ins_profileimgurl",null));
         instructor.setName(sp.getString("ins_name",null));
         instructor.setPassword(sp.getString("ins_password",null));
         instructor.setProfile(sp.getString("ins_profile",null));

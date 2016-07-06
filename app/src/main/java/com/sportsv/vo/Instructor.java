@@ -9,6 +9,7 @@ public class Instructor {
     private String email;
     private String password;
     private String name;
+    private String profileimgurl;
     private String profile;
     private String description;
     private String phone;
@@ -25,11 +26,12 @@ public class Instructor {
 
     public Instructor(){}
 
-    public Instructor(int instructorid, String email, String password, String name, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, int commontokenid, String serialnumber, String fcmtoken, String creationdate, String change_creationdate) {
+    public Instructor(int instructorid, String email, String password, String name, String profileimgurl, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, int commontokenid, String serialnumber, String fcmtoken, String creationdate, String change_creationdate) {
         this.instructorid = instructorid;
         this.email = email;
         this.password = password;
         this.name = name;
+        this.profileimgurl = profileimgurl;
         this.profile = profile;
         this.description = description;
         this.phone = phone;
@@ -43,6 +45,14 @@ public class Instructor {
         this.fcmtoken = fcmtoken;
         this.creationdate = creationdate;
         this.change_creationdate = change_creationdate;
+    }
+
+    public String getProfileimgurl() {
+        return profileimgurl;
+    }
+
+    public void setProfileimgurl(String profileimgurl) {
+        this.profileimgurl = profileimgurl;
     }
 
     public int getCommontokenid() {
@@ -188,6 +198,7 @@ public class Instructor {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
+                ", profileimgurl='" + profileimgurl + '\'' +
                 ", profile='" + profile + '\'' +
                 ", description='" + description + '\'' +
                 ", phone='" + phone + '\'' +

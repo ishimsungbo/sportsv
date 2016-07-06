@@ -9,14 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.sportsv.common.Auth;
 import com.sportsv.common.Common;
 import com.sportsv.common.Compare;
-import com.sportsv.common.PrefManager;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dbnetwork.FcmTokenTRService;
 import com.sportsv.test.TestActivity;
@@ -26,6 +26,7 @@ import com.sportsv.vo.User;
 
 import java.security.MessageDigest;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private PrefUtil prefUtil;
 
     private String hasykey=null;
+
+    @Bind(R.id.btn_move)
+    Button button;
 
 
     @Override
@@ -62,42 +66,15 @@ public class MainActivity extends AppCompatActivity {
         user = prefUtil.getUser();
         instructor = prefUtil.getIns();
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            Intent intent = getIntent();
-            String joinFlag = intent.getExtras().getString("join");
-            Log.d(TAG,"회원가입 후 메인으로 옴 " + joinFlag);
-
-        }else{
-            Log.d(TAG,"초기 앱을 실행");
-        }
-
         Log.d(TAG, "onCreate ===========================================================");
         FirebaseMessaging.getInstance().subscribeToTopic("news");
 
 
-        //초기슬라이딩 화면
-        findViewById(R.id.btn_play_again).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // We normally won't show the welcome slider again in real app
-                // but this is for testing
-                PrefManager prefManager = new PrefManager(getApplicationContext());
-
-                // make first time launch TRUE
-                prefManager.setFirstTimeLaunch(true);
-
-                startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
-                finish();
-            }
-        });
-
-        //브로드 캐스트 수신 받는 함수 동적으로...
-        //LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver, new IntentFilter("tokenReceiver"));
-         getAppKeyHash();
+        getAppKeyHash();
         Log.d(TAG,"해쉬키는 : " + hasykey);
-    }
 
+
+    }
 
     @OnClick(R.id.btn_move)
     public void btn_move(){
@@ -123,19 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        /*
-        if(Compare.isEmpty(user.getUseremail())){
-            Log.d(TAG, "유저 정보가 없다");
-            Intent login_intent = new Intent(getApplicationContext(),LoginActivity.class);
-            startActivity(login_intent);
-            overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-        }else{
-            Log.d(TAG,"유저 정보가 있다 : "+user.getUsername());
-            Intent login_intent = new Intent(this,UserInfoActivity.class);
-            startActivity(login_intent);
-            overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-        }
-        */
     }
 
 
@@ -151,24 +115,42 @@ public class MainActivity extends AppCompatActivity {
 
         String shToken = prefUtil.getFcmToken();
 
+        Log.d(TAG,"토큰 값은 : " + shToken);
+
         if(Compare.isEmpty(shToken)){
             //토큰이 없다면 프리퍼런스/DB에 저장한다
+            Log.d(TAG,"토큰이 없습니다");
             prefUtil.saveFcmToken(FirebaseInstanceId.getInstance().getToken());
         }else{
             if(!shToken.equals(FirebaseInstanceId.getInstance().getToken())){
-
+                Log.d(TAG,"토큰이 값이 다르기 때문에 업데이트를 합니다");
                 //디비의 토큰을 일괄로 업데이트 한다
                 FcmToken token = new FcmToken();
                 token.setSerialnumber(Common.getDeviceSerialNumber());
                 token.setFcmtoken(shToken);
                 FcmTokenTRService service = new FcmTokenTRService(this);
                 service.updateToken(token);
-
                 //쉐어프리퍼런스 토큰값을 변경
                 prefUtil.saveFcmToken(FirebaseInstanceId.getInstance().getToken());
             }
-
         }
+
+
+        if(!Compare.isEmpty(user.getUseremail())){
+            button.setText("유저정보 및 설정");
+            Auth.accountName = user.getGoogleemail();
+        }
+
+        if(!Compare.isEmpty(instructor.getEmail())){
+            button.setText("강사정보 및 설정");
+            Auth.accountName = instructor.getEmail();
+        }
+
+        if(Compare.isEmpty(user.getUseremail()) && Compare.isEmpty(instructor.getEmail())){
+            button.setText("로그인 및 회원 가입");
+        }
+
+
     }
 
     @Override
@@ -213,63 +195,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
-
-    @OnClick(R.id.btn_getToken)
-    public void btn_getToken(){
-        Log.d(TAG, "InstanceID token: " + FirebaseInstanceId.getInstance().getToken());
-        Log.d(TAG, "기기고유 아이디 " + Common.getDeviceSerialNumber());
-    }
-
-    //팝업 뛰우기
-    @OnClick(R.id.btn_pop)
-    public void btn_pop(){
-    }
-
-    //FCM관련 토크값 처리 로직
-    //1. 서버에 토큰값이 있는지 검색
-    //2. 토큰 값이 없다면 최초 실행이므로 DB저장
-    //   --만약 user정보가 있다면 토큰값을 현재 토큰으로 변경을 해준다.
-    //
-
-    //FCM 토큰 관련 처리
-/*    BroadcastReceiver tokenReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String token = intent.getStringExtra("token");
-            if(token != null)
-            {
-                //send token to your server or what you want to do
-                Log.d(TAG,"**************************************************************");
-                Log.d(TAG,"토큰 값은 : " + token);
-                Log.d(TAG,"**************************************************************");
-
-                FcmToken fcmToken = new FcmToken();
-                fcmToken.setSerialnumber(Common.getDeviceSerialNumber());
-                fcmToken.setFcmtoken(token);
-                fcmToken.setUid(user.getUid());
-                fcmToken.setCommontokenid(user.getCommontokenid());
-
-                FcmTokenService fcmTokenService = ServiceGenerator.createService(FcmTokenService.class);
-                final Call<ServerResult> call = fcmTokenService.saveToken(fcmToken);
-
-                call.enqueue(new Callback<ServerResult>() {
-                    @Override
-                    public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
-                        ServerResult serverResult = response.body();
-                        Log.d(TAG,"정상정으로 생성되었습니다." + serverResult.toString());
-                    }
-
-                    @Override
-                    public void onFailure(Call<ServerResult> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
-
-            }
-
-        }
-    };
-    */
 
     private void getAppKeyHash() {
         try {

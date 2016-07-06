@@ -63,8 +63,8 @@ public class InsJoinActivity extends AppCompatActivity {
     private String JoinCheck="N";
     private String phoneNumber = "";
 
-    PrefUtil prefUtil;
-    Instructor instructor;
+    private PrefUtil prefUtil;
+    private Instructor instructor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,21 +165,25 @@ public class InsJoinActivity extends AppCompatActivity {
         call.enqueue(new Callback<ServerResult>() {
             @Override
             public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
+
                 if(response.isSuccessful()){
 
                     ServerResult ins = response.body();
                     Log.d(TAG,"작업결과 : "+ ins.toString());
                     dialog.dismiss();
-                    VeteranToast.makeToast(getApplicationContext(), "강사님의 몸싸커 가입을 축하드립니다", Toast.LENGTH_SHORT).show();
 
-                    instructor.setInstructorid(ins.getCount());
-                    prefUtil.saveIns(instructor);
+                    if(ins.getCount() == -5){
+                        VeteranToast.makeToast(getApplicationContext(), "이미 가입되어 있는 아이디입니다", Toast.LENGTH_SHORT).show();
+                    }else{
+                        VeteranToast.makeToast(getApplicationContext(), "강사님의 몸싸커 가입을 축하드립니다", Toast.LENGTH_SHORT).show();
+                        instructor.setInstructorid(ins.getCount());
+                        prefUtil.saveIns(instructor);
 
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                    finish();
-
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
                 }else{
                     dialog.dismiss();
                     VeteranToast.makeToast(getApplicationContext(), "강사 정보 등록중 문제발생", Toast.LENGTH_SHORT).show();

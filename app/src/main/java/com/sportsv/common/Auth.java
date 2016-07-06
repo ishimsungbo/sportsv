@@ -12,6 +12,6 @@ public class Auth {
     // Register an API key here: https://console.developers.google.com
     public static final String KEY = "AIzaSyCfQm8zxmo3OIM4oSFZ846jmMWktTt0zdE";
     public static final String[] SCOPES = {Scopes.PROFILE, YouTubeScopes.YOUTUBE};
-    public static String accountName="null";
+    public static String accountName = "null";
 
 }

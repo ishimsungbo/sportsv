@@ -1,4 +1,4 @@
-package com.sportsv.serverservice;
+package com.sportsv.retropit;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,10 +8,11 @@ import java.util.HashSet;
 
 /**
  * Created by sungbo on 2016-06-20.
+ * 쿠키 인터셉터
  */
 public class DalgonaSharedPreferences {
 
-    public static final String KEY_COOKIE = "com.dalgonakit.key.cookie";
+    public static final String KEY_COOKIE = "com.sports.cookie";
 
     private Context mContext;
     private SharedPreferences pref;

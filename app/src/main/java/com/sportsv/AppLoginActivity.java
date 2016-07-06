@@ -146,10 +146,8 @@ public class AppLoginActivity extends AppCompatActivity {
         Log.d("User Info", "************************************************");
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("join_y", "join_flag");
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         finish();
 
     }

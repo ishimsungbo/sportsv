@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,30 +14,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.sportsv.R;
+import com.sportsv.WelcomeActivity;
+import com.sportsv.common.PrefManager;
 import com.sportsv.common.PrefUtil;
-import com.sportsv.dao.FeedBackService;
-import com.sportsv.dao.InstructorService;
-import com.sportsv.dao.UserService;
-import com.sportsv.dbnetwork.FcmTokenTRService;
-import com.sportsv.dbnetwork.UserMissionTRService;
-import com.sportsv.retropit.ServiceGenerator;
-import com.sportsv.vo.FeedbackHeader;
-import com.sportsv.vo.Instructor;
-import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.User;
-import com.sportsv.vo.UserMission;
 import com.sportsv.widget.VeteranToast;
 import com.sportsv.youtubeupload.StartUploadActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -49,28 +37,21 @@ public class TestActivity extends AppCompatActivity {
     private static final String TAG = "TestActivity";
 
     //와이파이 및 모바일 네트워크 설정
-    ConnectivityManager cManager;
-    NetworkInfo mobile;
-    NetworkInfo wifi;
+    private ConnectivityManager cManager;
+    private NetworkInfo mobile;
+    private NetworkInfo wifi;
 
     //기타설정
     private SharedPreferences mPref;
     Button btngent;
 
     //사용자정보
-    PrefUtil prefUtil;
-    User user;
+    private PrefUtil prefUtil;
+    private User user;
 
-
-    ProgressDialog asyncDialog;
-
+    private ProgressDialog asyncDialog;
     private ProgressBar mProgressLarge;
 
-    /****************************************************************************************************
-     ****************************************************************************************************
-     * **************************************************************************************************
-     * **************************************************************************************************
-     * **************************************************************************************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,15 +186,15 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_webview)
     public void btn_webview(){
-        /*
-        1.인텐트 방식으로 웹 브라우저 호출. 독립적으로 실행하기 때문에 안드로이드 컨트룰 불가능
+
+        //1.인텐트 방식으로 웹 브라우저 호출. 독립적으로 실행하기 때문에 안드로이드 컨트룰 불가능
         //String url ="selphone://post_detail?post_id=10"; get 방식으로 데이터에 맞는 url를 호출할 수 있다.
 
         String url = "https://m.youtube.com/create_channel?chromeless=1&next=/channel_creation_done";
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://m.youtube.com/create_channel?chromeless=1&next=/channel_creation_done"));
         intent.setPackage("com.android.chrome");
         startActivityForResult(intent, RESULT_WEBSITE);
-        */
+
     }
 
     @Override
@@ -245,47 +226,15 @@ public class TestActivity extends AppCompatActivity {
         asyncDialog.dismiss();
     }
 
+    @OnClick(R.id.btn_play_again)
+    public void initialSlide(){
+        PrefManager prefManager = new PrefManager(getApplicationContext());
 
-    @OnClick(R.id.btn_feed)
-    public void btn_feed() {
+        // make first time launch TRUE
+        prefManager.setFirstTimeLaunch(true);
 
-
-        /*
-        //유저 검색
-        UserService userService = ServiceGenerator.createService(UserService.class);
-        final Call<User> getUserInfo =userService.getUserTest();
-
-        getUserInfo.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG,"돌아온 값은 : " + response.body());
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-        //강사 검색
-        Instructor ins = new Instructor();
-        ins.setEmail("mom@mom.com");
-        ins.setPassword("ss780323");
-
-        InstructorService service = ServiceGenerator.createService(InstructorService.class,ins);
-        final Call<Instructor> c = service.getInstrutor(ins);
-        c.enqueue(new Callback<Instructor>() {
-            @Override
-            public void onResponse(Call<Instructor> call, Response<Instructor> response) {
-                Log.d(TAG,"값은 : " + response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Instructor> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });*/
-
+        startActivity(new Intent(this, WelcomeActivity.class));
+        finish();
     }
 
 }

@@ -16,11 +16,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,48 +31,26 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.googleapis.media.MediaHttpUploader;
-import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelListResponse;
-import com.google.api.services.youtube.model.Playlist;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
-import com.google.api.services.youtube.model.PlaylistSnippet;
-import com.google.api.services.youtube.model.PlaylistStatus;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
-import com.google.api.services.youtube.model.VideoSnippet;
-import com.google.api.services.youtube.model.VideoStatus;
 import com.sportsv.AppLoginActivity;
 import com.sportsv.R;
 import com.sportsv.common.Auth;
 import com.sportsv.common.Constants;
 import com.sportsv.common.GoogleAuth;
-import com.sportsv.common.PrefUtil;
-import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -80,9 +59,6 @@ import java.util.Locale;
 public class StartUploadActivity extends AppLoginActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "StartUploadActivity";
-    private User user;
-    PrefUtil prefUtil;
-
 
     YouTube.Videos.Insert videoInsert = null;
     /***********************************************************************************/
@@ -103,35 +79,76 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
     final JsonFactory jsonFactory = new GsonFactory();
 
     private UploadBroadcastReceiver broadcastReceiver;
-    /***********************************************************************************/
+
+    /******************************************
+     * 영상 업로드 관련 설정
+     * *****************************************/
+    public static ProgressBar progressBar;
+    public static TextView textView_up_title;
+    public static TextView textView_up_percent;
+    public static RelativeLayout uploadLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_upload_layout);
 
-        //초기값 셋팅
-        prefUtil=new PrefUtil(this);
-        user = prefUtil.getUser();
+        Log.d(TAG,"구글 업로드 계정 : " + Auth.accountName);
 
-        Log.d(TAG,"유저정보는 : "+user.toString());
-
-        Auth.accountName = user.getGoogleemail();
-
-        GoogleAuth googleAuth = new GoogleAuth(this,credential,user.getGoogleemail());
-
+        GoogleAuth googleAuth = new GoogleAuth(this,credential,Auth.accountName);
         credential = googleAuth.setYutubeCredential();
-
-        Log.d(TAG,"구글 저장 계정은  : "+credential.getSelectedAccountName());
         googleAPI();
 
-
         new Async(getApplicationContext()).execute();
-
         mGoogleApiClient.connect();
 
+        //업로드 프로그레스바 설정
+        uploadLayout = (RelativeLayout) findViewById(R.id.upload_layout);
+        uploadLayout.setVisibility(View.GONE); // 최초 화면에서 제외
 
+        progressBar = (ProgressBar) findViewById(R.id.upload_progress);
+        textView_up_title = (TextView) findViewById(R.id.tx_upload_title);
+        textView_up_percent = (TextView) findViewById(R.id.upload_percent);
+
+        //브로드 캐스트 수신 받는 함수 동적으로...
+        LocalBroadcastManager.getInstance(this).registerReceiver(uploadReceiver, new IntentFilter("uploadReceiver"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(uploadVideo, new IntentFilter("uploadVideo"));
     }
+
+    BroadcastReceiver uploadVideo = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String upPercent = intent.getStringExtra("upPercent");
+            String upTitle = intent.getStringExtra("upTitle");
+            if(upPercent != null) {
+                Log.d(TAG,"업로드 진행도 : " + upPercent + "%");
+                textView_up_percent.setText(upPercent + "%");
+                textView_up_title.setText(upTitle);
+            }
+
+        }
+    };
+
+    BroadcastReceiver uploadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String uploadMessage = intent.getStringExtra("uploadMessage");
+            if(uploadMessage != null)
+            {
+                Log.d(TAG,"****************************************************************************************");
+                Log.d(TAG,"******************************* 업로드 종료 *******************************");
+                Log.d(TAG,"****************************************************************************************");
+
+                uploadLayout.setVisibility(View.GONE);
+
+                //start Database transaction
+
+
+                VeteranToast.makeToast(getApplicationContext(),"받은 값 :" + uploadMessage,Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    };
 
     public void mOnClick(View view){
         switch (view.getId()){
@@ -158,7 +175,7 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API)
-                .setAccountName(user.getGoogleemail())
+                .setAccountName(Auth.accountName)
                 .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
     }
@@ -232,11 +249,14 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
 
                     if (mFileURI != null) {
                         Intent uploadIntent = new Intent(this, UploadService.class);
+
                         uploadIntent.setData(mFileURI);
-                        uploadIntent.putExtra("uid",String.valueOf(user.getUid()));
-                        uploadIntent.putExtra("missionid",String.valueOf(1));
                         uploadIntent.putExtra("filename",getName(mFileURI));
-                        uploadIntent.putExtra("account", Auth.accountName);
+                        uploadIntent.putExtra("category","카테고리");
+                        /************
+                         * 업로드할 비디오에 대한 상세 값들 셋팅
+                         * *************/
+                        uploadLayout.setVisibility(View.VISIBLE);
                         startService(uploadIntent);
                     }
 
@@ -251,8 +271,7 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
             case REQUEST_ACCOUNT_PICKER:
                 if (resultCode == Activity.RESULT_OK && data != null
                         && data.getExtras() != null) {
-                    String accountName = data.getExtras().getString(
-                            AccountManager.KEY_ACCOUNT_NAME);
+                    String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
                         Auth.accountName = accountName;
                         credential.setSelectedAccountName(accountName);
@@ -268,9 +287,9 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
                 REQUEST_ACCOUNT_PICKER);
     }
 
-    /*****************************************************************/
-    //테스트용
-    /*****************************************************************/
+    /*****************************************************************
+    /* 유투부 동영상 목록 가져오기 API 테스트용
+    *****************************************************************/
     private void loadUploadedVideos() {
 
         setProgressBarIndeterminateVisibility(true);
@@ -291,13 +310,6 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
                             .list("contentDetails").setMine(true).execute();
 
                     List<Channel> channelsList =  clr.getItems();
-
-
-                    Log.d(TAG,"==============================================================");
-
-
-
-                    Log.d(TAG,"==============================================================");
 
                     // Get the user's uploads playlist's id from channel list
                     // response
@@ -342,20 +354,6 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
                         }
                     }
 
-/*                    // Sort videos by title
-                    Collections.sort(videos, new Comparator<VideoData>() {
-                        @Override
-                        public int compare(VideoData videoData,
-                                           VideoData videoData2) {
-                            return videoData.getTitle().compareTo(
-                                    videoData2.getTitle());
-                        }
-                    });
-
-                    for(int i = 0 ; i < videos.size() ; i++){
-                        Log.d(TAG,"비디오 명은 : " + videos.get(i).getTitle());
-                    }
-*/
                     Log.d(TAG,"가져오기 성공");
 
                     return videos;
@@ -411,7 +409,6 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
 
             //String token = credential.getToken();
             //Log.d(TAG, "구글 토큰값은 : "+token);
-
 
         } catch (Exception e) {
             e.getMessage();

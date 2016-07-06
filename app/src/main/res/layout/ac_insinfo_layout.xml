@@ -12,11 +12,10 @@
         >
 
         <ImageView
-            android:id="@+id/ins_image"
+            android:id="@+id/imageView_ins"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:adjustViewBounds="true"
-            android:onClick="imageOnClick"
             android:src="@drawable/userimage"
             android:layout_gravity="center"
             android:maxWidth="100dp"
@@ -43,11 +42,75 @@
 
 
     <ScrollView
+        android:background="@color/com_facebook_button_background_color_disabled"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fadeScrollbars = "true"
+        >
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
 
+                <TextView
+                    android:text="비디오피드백 금액 : "
+                    android:textSize="20sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/tx_videopoint"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="20dp"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.3dp"
+                android:background="#4682B4" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+                <TextView
+                    android:text="코멘트 피드백 금액 : "
+                    android:textSize="20sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/tx_wordpoint"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="20dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
 
