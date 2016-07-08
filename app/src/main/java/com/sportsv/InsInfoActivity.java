@@ -24,8 +24,9 @@ import com.sportsv.common.Compare;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.common.SettingActivity;
 import com.sportsv.dao.InstructorService;
+import com.sportsv.dbnetwork.InstructorTRService;
 import com.sportsv.retropit.ServiceGenerator;
-import com.sportsv.serverservice.InsFileUploadService;
+import com.sportsv.team.TeamActivity;
 import com.sportsv.vo.Instructor;
 import com.sportsv.vo.InstructorPointHistory;
 import com.sportsv.widget.VeteranToast;
@@ -90,10 +91,11 @@ public class InsInfoActivity extends AppCompatActivity {
                     .load(instructor.getProfileimgurl())
                     .into(imageView);
         }
-        Log.d(TAG," 강사 정보는  : " + instructor.toString());
+        Log.d(TAG," 강사 정보  : " + instructor.toString());
         getInsPointSetup();
 
     }
+
 
     //이미지 버튼 클릭시 강사사진 업로드
     @OnClick(R.id.imageView_ins)
@@ -265,7 +267,7 @@ public class InsInfoActivity extends AppCompatActivity {
                 final Bundle extras = data.getExtras();
 
                 //크롭된 이미지를 저장하기 위한 file 경로
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel/"+System.currentTimeMillis()+".jpg";
+                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+Common.IMAGE_MOM_PATH+System.currentTimeMillis()+".jpg";
 
                 Log.d(TAG,"파일 경로는 : " + filePath);
 
@@ -279,17 +281,19 @@ public class InsInfoActivity extends AppCompatActivity {
                     absoultePath = filePath;
                     break;
                 }
+
                 File file = new File(mImageCaptureUri.getPath());
+
                 if(file.exists()){
                     file.delete();
                 }
         }
 
     }
-    //파일을 업로드하기 위한 Spring RestTemplate Http Network
+
     private void storeCropImage(Bitmap bitmap,String filePath){
 
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel/";
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+Common.IMAGE_MOM_PATH;
         File directory_SmartWheel = new File(dirPath);
 
         if(!directory_SmartWheel.exists())
@@ -297,22 +301,6 @@ public class InsInfoActivity extends AppCompatActivity {
 
         //서버에 파일을 업로드 합니다
         String profileimgurl = Common.SERVER_INS_IMGFILEADRESS + fileName;
-        String strInsId = String.valueOf(instructor.getInstructorid());
-
-        //강사 아이디
-        //확장자를 포함한 파일명
-        //확장자를 포함한 파일의 위치+파일명
-
-        new InsFileUploadService(strInsId,fileName,RealFilePath,instructor,this).execute();
-
-        //유저사진을 쉐어퍼런스에 저장해준다(업데이트)
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor pre = sp.edit();
-        pre.putString("ins_profileimgurl", profileimgurl);
-
-        Log.d(TAG,"서버 파일 저장 경로는 : " + RealFilePath);
-
-        pre.commit();
 
         File copyFile = new File(filePath);
         BufferedOutputStream out = null;
@@ -321,6 +309,8 @@ public class InsInfoActivity extends AppCompatActivity {
             copyFile.createNewFile();
             out = new BufferedOutputStream(new FileOutputStream(copyFile));
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
+
+            Log.d(TAG,"파일 갱신 할 정보는  : " + copyFile);
 
             //sendBrodcast를 통해 Crop된 사진을 앨범에 보이도록 갱신한다
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(copyFile)));
@@ -331,6 +321,19 @@ public class InsInfoActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        InstructorTRService instructorTRService = new InstructorTRService(this,instructor);
+        instructorTRService.upladteInsImage(fileName,RealFilePath);
+
+        //유저사진을 쉐어퍼런스에 저장해준다(업데이트)
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor pre = sp.edit();
+        pre.putString("ins_profileimgurl", profileimgurl);
+        pre.commit();
+
+        Log.d(TAG,"서버 파일 저장 경로는 : " + RealFilePath);
+
+
     }
 
     private void getInsPointSetup(){
@@ -338,7 +341,7 @@ public class InsInfoActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(this, "","강사의 포인트 정책을 가져옵니다", true);
         dialog.show();
 
-        InstructorService instructorService = ServiceGenerator.createService(InstructorService.class,instructor);
+        InstructorService instructorService = ServiceGenerator.createService(InstructorService.class,this,instructor);
         final Call<InstructorPointHistory> call = instructorService.getPointHis(instructor.getInstructorid());
         call.enqueue(new Callback<InstructorPointHistory>() {
             @Override
@@ -363,6 +366,15 @@ public class InsInfoActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    //팀만들기
+    @OnClick(R.id.bt_makeTeam)
+    public void makeTeam(){
+
+        Intent intent = new Intent(this,TeamActivity.class);
+        startActivity(intent);
+
     }
 
 }

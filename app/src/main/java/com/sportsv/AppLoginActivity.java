@@ -100,7 +100,7 @@ public class AppLoginActivity extends AppCompatActivity {
         dialog.show();
 
 
-        UserService userService = ServiceGenerator.createService(UserService.class,parameterUser);
+        UserService userService = ServiceGenerator.createService(UserService.class,this,parameterUser);
 
         final Call<ServerResult> getUserInfo = userService.getUserCheck(parameterUser.getSnstype(),parameterUser.getUseremail());
 
@@ -108,21 +108,20 @@ public class AppLoginActivity extends AppCompatActivity {
         getUserInfo.enqueue(new Callback<ServerResult>() {
             @Override
             public void onResponse(Call<ServerResult> call, Response<ServerResult> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "서버 조회 결과 성공");
+                    ServerResult serverResult = response.body();
+                    Log.d(TAG, "서버 조회 결과 값은 : " + serverResult.getResult());
+                    dialog.dismiss();
 
-                Log.d(TAG, "서버 조회 결과 성공");
-
-                ServerResult serverResult = response.body();
-
-                Log.d(TAG, "서버 조회 결과 값은 : " + serverResult.getResult());
-
-                dialog.dismiss();
-
-                if(serverResult.getCount()==1){
-
-                    getUserSet();
-
+                    if(serverResult.getCount()==1){
+                        getUserSet();
+                    }else{
+                        VeteranToast.makeToast(getApplicationContext(),"입력하신 계정이 존재하지 않습니다",Toast.LENGTH_SHORT).show();
+                    }
                 }else{
-                    VeteranToast.makeToast(getApplicationContext(),"입력하신 계정이 존재하지 않습니다",Toast.LENGTH_SHORT).show();
+                    VeteranToast.makeToast(getApplicationContext(),"서버와 통신중 문제가 발생했습니다",Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 }
             }
 

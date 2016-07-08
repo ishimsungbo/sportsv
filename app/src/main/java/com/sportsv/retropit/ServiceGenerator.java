@@ -1,5 +1,6 @@
 package com.sportsv.retropit;
 
+import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
@@ -33,27 +34,51 @@ public class ServiceGenerator {
 
     public ServiceGenerator() {}
 
-
-
-
     //신규가입 및 인증 없이 서버결과 조회
     public static <S> S createService(Class<S> serviceClass) {
 
-         Retrofit.Builder builder =
+        Retrofit.Builder builder =
                 new Retrofit.Builder()
                         .baseUrl(API_BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                 ;
 
-        Retrofit retrofit = builder.build();
-
         Log.d(TAG,"레트로핏 서비스 호출(범용) =======================================");
 
+        /*******************************************************************************
+         인터셉터 옵션. 개발시 요청 헤더 바디를 볼때 주석을 풀어서 사용
+         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+         //로그 인터셉터
+         httpClient.addInterceptor(loggingInterceptor);
+
+         //서버에 값을 보낼때 설정
+
+         httpClient.addInterceptor(new Interceptor() {
+        @Override
+        public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+        okhttp3.Request original = chain.request();
+
+        okhttp3.Request.Builder requestBuilder = original.newBuilder()
+        .addHeader("appName", BuildConfig.APPLICATION_ID)
+        .addHeader("platform", "android")
+        .addHeader("appVersion", BuildConfig.VERSION_NAME)
+        .addHeader("User-Agent", "Mom Soccer Android");
+
+        okhttp3.Request request = requestBuilder.build();
+        return chain.proceed(request);
+        }
+        });
+         *****************************************************************************/
+
+        okhttp3.OkHttpClient client = httpClient.build();
+        Retrofit retrofit = builder.client(client).build();
         return retrofit.create(serviceClass);
     }
 
     //회원 및 인증이 필요한 일반 유저용
-    public static <S> S createService(Class<S> serviceClass, User user) {
+    public static <S> S createService(Class<S> serviceClass, Context context, User user) {
 
         Retrofit.Builder builder =
                 new Retrofit.Builder()
@@ -85,8 +110,8 @@ public class ServiceGenerator {
 
                     Request.Builder requestBuilder = original.newBuilder()
                             .header("Authorization", basic)
-                    .header("Accept", "application/json")
-                    .method(original.method(), original.body());
+                            .header("Accept", "application/json")
+                            .method(original.method(), original.body());
 
                     Request request = requestBuilder.build();
                     return chain.proceed(request);
@@ -95,41 +120,48 @@ public class ServiceGenerator {
 
         }
 
-        //httpClient.interceptors().add(new AddCookiesInterceptor(context));
-        //httpClient.interceptors().add(new ReceivedCookiesInterceptor(context));
+        AddCookiesInterceptor addCookiesInterceptor = new AddCookiesInterceptor(context);
+        ReceivedCookiesInterceptor receivedCookiesInterceptor = new ReceivedCookiesInterceptor(context);
 
-        //HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        //loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClient.addNetworkInterceptor(addCookiesInterceptor);
+        httpClient.addInterceptor(receivedCookiesInterceptor);
 
-        //로그 인터셉터
-        //httpClient.addInterceptor(loggingInterceptor);
+        /*****************************************************************************
+         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        //서버에 값을 보낼때 설정
-        /*
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
-                okhttp3.Request original = chain.request();
+         //로그 인터셉터
+         httpClient.addInterceptor(loggingInterceptor);
 
-                okhttp3.Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("appName", BuildConfig.APPLICATION_ID)
-                        .addHeader("platform", "android")
-                        .addHeader("appVersion", BuildConfig.VERSION_NAME)
-                        .addHeader("User-Agent", "Mom Soccer Android");
 
-                okhttp3.Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
+         //서버에 값을 보낼때 설정
+         /*
+         httpClient.addInterceptor(new Interceptor() {
+        @Override
+        public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+        okhttp3.Request original = chain.request();
+
+        okhttp3.Request.Builder requestBuilder = original.newBuilder()
+        .addHeader("appName", BuildConfig.APPLICATION_ID)
+        .addHeader("platform", "android")
+        .addHeader("appVersion", BuildConfig.VERSION_NAME)
+        .addHeader("User-Agent", "Mom Soccer Android");
+
+        okhttp3.Request request = requestBuilder.build();
+        return chain.proceed(request);
+        }
         });
-        */
+         *****************************************************************************/
 
         okhttp3.OkHttpClient client = httpClient.build();
+
+
         Retrofit retrofit = builder.client(client).build();
         return retrofit.create(serviceClass);
     }
 
     //강사 인증용
-    public static <S> S createService(Class<S> serviceClass, Instructor instructor) {
+    public static <S> S createService(Class<S> serviceClass,Context context,Instructor instructor) {
 
         Retrofit.Builder builder =
                 new Retrofit.Builder()
@@ -142,26 +174,58 @@ public class ServiceGenerator {
         String adminEmail = instructor.getEmail();
         String adminPwd   = instructor.getPassword();
 
-            String credentials =  adminEmail+ ":" + adminPwd;
+        String credentials =  adminEmail+ ":" + adminPwd;
 
-            final String basic =
-                    "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        final String basic =
+                "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-            httpClient.addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Interceptor.Chain chain) throws IOException {
-                    Request original = chain.request();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
 
-                    Request.Builder requestBuilder = original.newBuilder()
-                            .header("Authorization", basic)
-                            .header("Accept", "application/json")
-                            .method(original.method(), original.body());
+                Request.Builder requestBuilder = original.newBuilder()
+                        .header("Authorization", basic)
+                        .header("Accept", "application/json")
+                        .method(original.method(), original.body());
 
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                }
-            });
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        });
 
+        AddCookiesInterceptor addCookiesInterceptor = new AddCookiesInterceptor(context);
+        ReceivedCookiesInterceptor receivedCookiesInterceptor = new ReceivedCookiesInterceptor(context);
+
+        httpClient.addNetworkInterceptor(addCookiesInterceptor);
+        httpClient.addInterceptor(receivedCookiesInterceptor);
+
+        /*****************************************************************************
+         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+         //로그 인터셉터
+         httpClient.addInterceptor(loggingInterceptor);
+
+
+         //서버에 값을 보낼때 설정
+         /*
+         httpClient.addInterceptor(new Interceptor() {
+        @Override
+        public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+        okhttp3.Request original = chain.request();
+
+        okhttp3.Request.Builder requestBuilder = original.newBuilder()
+        .addHeader("appName", BuildConfig.APPLICATION_ID)
+        .addHeader("platform", "android")
+        .addHeader("appVersion", BuildConfig.VERSION_NAME)
+        .addHeader("User-Agent", "Mom Soccer Android");
+
+        okhttp3.Request request = requestBuilder.build();
+        return chain.proceed(request);
+        }
+        });
+         *****************************************************************************/
 
         okhttp3.OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();

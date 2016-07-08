@@ -18,6 +18,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.sportsv.AppLoginActivity;
 import com.sportsv.R;
 import com.sportsv.common.Auth;
+import com.sportsv.common.Common;
 import com.sportsv.common.Constants;
 import com.sportsv.common.GoogleAuth;
 import com.sportsv.widget.VeteranToast;
@@ -88,6 +90,8 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
     public static TextView textView_up_percent;
     public static RelativeLayout uploadLayout;
 
+    Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +108,6 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
 
         //업로드 프로그레스바 설정
         uploadLayout = (RelativeLayout) findViewById(R.id.upload_layout);
-        uploadLayout.setVisibility(View.GONE); // 최초 화면에서 제외
 
         progressBar = (ProgressBar) findViewById(R.id.upload_progress);
         textView_up_title = (TextView) findViewById(R.id.tx_upload_title);
@@ -112,7 +115,20 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
 
         //브로드 캐스트 수신 받는 함수 동적으로...
         LocalBroadcastManager.getInstance(this).registerReceiver(uploadReceiver, new IntentFilter("uploadReceiver"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(uploadVideo, new IntentFilter("uploadVideo"));
+
+        //LocalBroadcastManager.getInstance(this).registerReceiver(uploadVideo, new IntentFilter("uploadVideo"));
+
+        //업로드 중이라면 없애지 않고 최초 접속이라면 안보이게 한다
+
+        //uploadLayout.setVisibility(View.GONE);
+
+        button = (Button) findViewById(R.id.btnUploadCancel);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Common.setUpflag(true);
+            }
+        });
     }
 
     BroadcastReceiver uploadVideo = new BroadcastReceiver() {
@@ -120,9 +136,15 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
         public void onReceive(Context context, Intent intent) {
             String upPercent = intent.getStringExtra("upPercent");
             String upTitle = intent.getStringExtra("upTitle");
+            String upflag = intent.getStringExtra("upflag");
             if(upPercent != null) {
                 Log.d(TAG,"업로드 진행도 : " + upPercent + "%");
                 textView_up_percent.setText(upPercent + "%");
+                textView_up_title.setText(upTitle);
+            }
+
+            if(upflag.equals("N")){
+                textView_up_percent.setText("0%");
                 textView_up_title.setText(upTitle);
             }
 
@@ -133,18 +155,26 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
         @Override
         public void onReceive(Context context, Intent intent) {
             String uploadMessage = intent.getStringExtra("uploadMessage");
-            if(uploadMessage != null)
+            String upflag = intent.getStringExtra("upflag");
+            if(uploadMessage != null && upflag.equals("uploadCancel"))
             {
                 Log.d(TAG,"****************************************************************************************");
                 Log.d(TAG,"******************************* 업로드 종료 *******************************");
                 Log.d(TAG,"****************************************************************************************");
 
-                uploadLayout.setVisibility(View.GONE);
-
+                //uploadLayout.setVisibility(View.GONE);
                 //start Database transaction
+                VeteranToast.makeToast(getApplicationContext(),"업로드를 취소 하셨습니다",Toast.LENGTH_SHORT).show();
+                Common.setUpflag(false);
+            }else{
+                textView_up_percent.setText("100%");
+                progressBar.setProgress(100);
+                VeteranToast.makeToast(getApplicationContext(),"업로드가 되었습니다. 비디오 아이디는 : "+ upflag,Toast.LENGTH_SHORT).show();
+                // => upflag : videoid
+
+                //업로드가 종료되면 화면에 그린다
 
 
-                VeteranToast.makeToast(getApplicationContext(),"받은 값 :" + uploadMessage,Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -253,10 +283,11 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
                         uploadIntent.setData(mFileURI);
                         uploadIntent.putExtra("filename",getName(mFileURI));
                         uploadIntent.putExtra("category","카테고리");
+
                         /************
                          * 업로드할 비디오에 대한 상세 값들 셋팅
                          * *************/
-                        uploadLayout.setVisibility(View.VISIBLE);
+                        //uploadLayout.setVisibility(View.VISIBLE);
                         startService(uploadIntent);
                     }
 
@@ -452,6 +483,16 @@ public class StartUploadActivity extends AppLoginActivity implements GoogleApiCl
         return cursor.getString(column_index);
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
 
 }

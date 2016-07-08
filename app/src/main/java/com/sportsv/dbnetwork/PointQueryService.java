@@ -21,7 +21,7 @@ import retrofit2.Response;
  */
 public class PointQueryService {
 
-    String TAG;
+    private String TAG = "PointQueryService";
 
     private Context context;
     private SpBalanceHeader spBalanceHeader;
@@ -56,7 +56,7 @@ public class PointQueryService {
         dialog = ProgressDialog.show(context, "서버와 통신", "셀프 포인트를 조회합니다", true);
         dialog.show();
 
-        PointService pointService = ServiceGenerator.createService(PointService.class,user);
+        PointService pointService = ServiceGenerator.createService(PointService.class,context,user);
 
         final Call<SpBalanceHeader> spBalanceHeaderCall = pointService.getSelfAmt(user.getUid());
 
@@ -101,7 +101,7 @@ public class PointQueryService {
         dialog = ProgressDialog.show(context, "서버와 통신", "Cash 포인트를 조회합니다", true);
         dialog.show();
 
-        PointService pointService = ServiceGenerator.createService(PointService.class,user);
+        PointService pointService = ServiceGenerator.createService(PointService.class,context,user);
 
         final Call<CpBalanceHeader> call = pointService.getCashAmt(user.getUid());
 

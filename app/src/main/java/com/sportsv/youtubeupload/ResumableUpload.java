@@ -1,8 +1,14 @@
 package com.sportsv.youtubeupload;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -15,6 +21,8 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
+import com.sportsv.R;
+import com.sportsv.common.Common;
 import com.sportsv.common.Constants;
 
 import java.io.BufferedInputStream;
@@ -22,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.concurrent.CancellationException;
 
 /**
  * Created by sungbo on 2016-06-13.
@@ -36,7 +45,35 @@ public class ResumableUpload {
 
     public static String upload(YouTube youtube, final InputStream fileInputStream,
                                 final long fileSize, final Uri mFileUri, final String path, final Context context, final YoutubeUploadVo uploadVo) {
+
+        //노티피케이션
+        /*******************************************************************/
+        final NotificationManager notifyManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
+
+        Intent notificationIntent = new Intent(context, StartUploadActivity.class);
+
+        notificationIntent.setData(mFileUri);
+
+        notificationIntent.setAction(Intent.ACTION_VIEW);
+
+        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(context,
+                0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        builder.setContentTitle("유투브 영상 업로드")
+                .setContentText("유투브 영상 업로드를 시작합닏 ")
+                .setSmallIcon(R.drawable.ic_stat_device_access_video).setContentIntent(contentIntent).setStyle(new NotificationCompat.BigPictureStyle().bigPicture(thumbnail));
+        notifyManager.notify(UPLOAD_NOTIFICATION_ID, builder.build());
+
+        /*******************************************************************/
+
+
         String videoId = null;
+
         try {
             // Add extra information to the video before uploading.
             Video videoObjectDefiningMetadata = new Video();
@@ -62,8 +99,8 @@ public class ResumableUpload {
             //cal.getTime()
 
             Calendar cal = Calendar.getInstance();
-            snippet.setTitle(uploadVo.getVideoSubject());
-            snippet.setDescription(uploadVo.getDescription() + "  " + uploadVo.getComDisp());
+            snippet.setTitle("영상 제목");
+            snippet.setDescription("영상 설명란");
 
             // Set your keywords.
             snippet.setTags(Arrays.asList(Constants.DEFAULT_KEYWORD,
@@ -95,23 +132,49 @@ public class ResumableUpload {
             uploader.setDirectUploadEnabled(false);
 
             MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
-                Intent intent = new Intent("uploadVideo");
-                LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(context);
+
+                //주석은 업로드 프로그레스바 관련
+                //Intent intent = new Intent("uploadVideo");
+                //LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(context);
+
+                //업로드관련 설정
+
 
                 public void progressChanged(MediaHttpUploader uploader) throws IOException {
+
+                    if (Common.isUpflag()) {
+                        //This was the only way I found to abort the download
+
+                        Log.d(TAG,"업로드를 취소합니다");
+                        throw new CancellationException("업로드 취소");
+                    }
+
                     switch (uploader.getUploadState()) {
                         case INITIATION_STARTED:
                             Log.d(TAG,"INITIATION_STARTED  ========================");
+
+
+/*
                             intent.putExtra("upTitle",uploadVo.getRealFileName() + " 영상 업로드 준비 및 서버 확인중");
+                            intent.putExtra("upflag","Y");
                             broadcastManager.sendBroadcast(intent);
+*/
+
+                            builder.setContentText("업로드를 시작~~~~").setProgress((int) fileSize,
+                                    (int) uploader.getNumBytesUploaded(), false);
+                            notifyManager.notify(UPLOAD_NOTIFICATION_ID, builder.build());
+
                             break;
                         case INITIATION_COMPLETE:
                             Log.d(TAG,"INITIATION_COMPLETE ========================");
+                            builder.setContentText("업로드를 완료 했습니다").setProgress((int) fileSize,
+                                    (int) uploader.getNumBytesUploaded(), false);
+                            notifyManager.notify(UPLOAD_NOTIFICATION_ID, builder.build());
                             break;
                         case MEDIA_IN_PROGRESS:
                             Log.d(TAG,"MEDIA_IN_PROGRESS 1 ========================" + uploader.getProgress() * 100 + "%");
 
-                            int integer = (int) (uploader.getProgress() * 100);
+/*                            int integer = (int) (uploader.getProgress() * 100);
                             StartUploadActivity.progressBar.setProgress(integer);
                             intent.putExtra("upPercent",String.valueOf(integer));
 
@@ -120,11 +183,27 @@ public class ResumableUpload {
                             }else{
                                 intent.putExtra("upTitle", uploadVo.getRealFileName()+" 영상을 업로드 중입니다");
                             }
-                            broadcastManager.sendBroadcast(intent);
+                            broadcastManager.sendBroadcast(intent);*/
+
+                            builder
+                                    .setContentTitle(uploadVo.getRealFileName() + (int) (uploader.getProgress() * 100) + "%")
+
+                                    .setContentText("업로드 진행 상태")
+
+                                    .setProgress((int) fileSize, (int) uploader.getNumBytesUploaded(), false);
+
+                            notifyManager.notify(UPLOAD_NOTIFICATION_ID, builder.build());
+
                             break;
                         case MEDIA_COMPLETE:
                             Log.d(TAG,"MEDIA_COMPLETE ========================");
-                            broadcastManager.sendBroadcast(intent);
+                            //broadcastManager.sendBroadcast(intent);
+
+                            builder.setContentTitle("업로드가 완료")
+                                    .setContentText("완료~~~~~")
+                                    .setProgress(0, 0, false);
+                            notifyManager.notify(UPLOAD_NOTIFICATION_ID, builder.build());
+
                         case NOT_STARTED:
                             Log.d(TAG,"NOT_STARTED ========================");
                             break;
@@ -143,16 +222,17 @@ public class ResumableUpload {
 
         } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
             Log.e(TAG, "GooglePlayServicesAvailabilityIOException", availabilityException);
-            //notifyFailedUpload(context, context.getString(R.string.cant_access_play), notifyManager, builder);
+            notifyFailedUpload(context,"구글 서비스를 이용할 수 없습니다", notifyManager, builder);
         } catch (UserRecoverableAuthIOException userRecoverableException) {
             Log.i(TAG, String.format("UserRecoverableAuthIOException: %s",
                     userRecoverableException.getMessage()));
-            //userRecoverableException.printStackTrace();
-            //최초가입일 경우 구글 유투브 업로드 설정이 안되어 있기 떄문에 다시 재 로그인한다
             requestAuth(context, userRecoverableException);
         } catch (IOException e) {
             Log.e(TAG, "IOException", e);
-            //구글계정은 있지만 유투브 계정이 없기 떄문에 에러가 난다면...웹뷰로 유투브 인증을 해줘야 한다.
+            notifyFailedUpload(context, "업로드를 재시도 합니다", notifyManager, builder);
+        } catch (CancellationException e){
+            Log.e(TAG, "사용자 에러를 발생 시켰습니다");
+            return "uploadCancel";
         }
         return videoId;
     }
@@ -169,5 +249,15 @@ public class ResumableUpload {
 
         manager.sendBroadcast(runReqAuthIntent);
     }
+
+    //업로드 실패시
+    private static void notifyFailedUpload(Context context, String message, NotificationManager notifyManager,
+                                           NotificationCompat.Builder builder) {
+        builder.setContentTitle("업로드를 실패 했습니다")
+                .setContentText(message);
+        notifyManager.notify(UPLOAD_NOTIFICATION_ID, builder.build());
+        Log.e(ResumableUpload.class.getSimpleName(), message);
+    }
+
 }
 

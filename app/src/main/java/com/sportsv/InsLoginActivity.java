@@ -79,7 +79,7 @@ public class InsLoginActivity extends AppCompatActivity {
             ins.setEmail(edit_email_lg.getText().toString());
             ins.setPassword(edit_password_lg.getText().toString());
 
-            InstructorService instructorService = ServiceGenerator.createService(InstructorService.class,ins);
+            InstructorService instructorService = ServiceGenerator.createService(InstructorService.class,this,ins);
             final Call<Instructor> call = instructorService.insLogin(ins);
             call.enqueue(new Callback<Instructor>() {
                 @Override

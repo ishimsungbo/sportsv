@@ -31,6 +31,13 @@
         android:textSize="20sp"
         />
 
+    <Button
+        android:id="@+id/bt_makeTeam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="팀만들기"
+        android:textSize="20sp"
+        />
 
     <Button
         android:id="@+id/ins_setting"

@@ -1,10 +1,11 @@
 package com.sportsv.dbnetwork;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.sportsv.dao.UserMissionService;
 import com.sportsv.retropit.ServiceGenerator;
 import com.sportsv.vo.ServerResult;
@@ -20,17 +21,17 @@ import retrofit2.Response;
  */
 public class UserMissionTRService {
 
-    private String TAG = "UserMissionTRService";
+    private static final String TAG = "PointQueryService";
 
-    private Context context;
+    private Activity activity;
     private User user;
 
     private int usermissionid = 0 ;
     private String resultCode="";
 
 
-    public UserMissionTRService(Context context, User user) {
-        this.context = context;
+    public UserMissionTRService(Activity activity, User user) {
+        this.activity = activity;
         this.user = user;
     }
 
@@ -38,11 +39,11 @@ public class UserMissionTRService {
 
         final ProgressDialog dialog;
 
-        dialog = ProgressDialog.show(context, "서버와 통신", "셀프 포인트를 조회합니다", true);
+        dialog = ProgressDialog.show(activity, "서버와 통신", "셀프 포인트를 조회합니다", true);
         dialog.show();
 
 
-        UserMissionService userMissionService = ServiceGenerator.createService(UserMissionService.class,user);
+        UserMissionService userMissionService = ServiceGenerator.createService(UserMissionService.class,activity,user);
 
         final Call<ServerResult> createMission = userMissionService.createUserMission(userMission);
 
@@ -71,7 +72,7 @@ public class UserMissionTRService {
                                    int uId,
                                    String youTubeaddr){
 
-        UserMissionService userMissionService = ServiceGenerator.createService(UserMissionService.class,user);
+        UserMissionService userMissionService = ServiceGenerator.createService(UserMissionService.class,activity,user);
         final Call<ServerResult> updateUserMission = userMissionService.updateUserMission(userMissionId,uId,youTubeaddr);
 
         updateUserMission.enqueue(new Callback<ServerResult>() {
@@ -82,9 +83,9 @@ public class UserMissionTRService {
                 Log.d(TAG,"서버요청 결과 값은 " + serverResult.toString());
 
                 if(resultCode.equals("update")){
-                    VeteranToast.makeToast(context,"유저미션이 업데이트 되었습니다",Toast.LENGTH_LONG).show();
+                    VeteranToast.makeToast(activity,"유저미션이 업데이트 되었습니다",Toast.LENGTH_LONG).show();
                 }else{
-                    VeteranToast.makeToast(context,"유저미션 업데이트 도중 에러가 발생했습니다. 관리자에게 문의해주세요",Toast.LENGTH_LONG).show();
+                    VeteranToast.makeToast(activity,"유저미션 업데이트 도중 에러가 발생했습니다. 관리자에게 문의해주세요",Toast.LENGTH_LONG).show();
                 }
             }
 

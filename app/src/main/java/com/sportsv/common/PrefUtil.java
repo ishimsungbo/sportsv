@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.sportsv.vo.Instructor;
+import com.sportsv.vo.Team;
 import com.sportsv.vo.User;
 
 
@@ -131,6 +132,45 @@ public class PrefUtil {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
         String preFcmToken = sp.getString("fcmtoken", null);
         return preFcmToken;
+    }
+
+    public void uploadFlag(String upFlag){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor pre = sp.edit();
+        pre.putString("uploadflag",upFlag);
+        pre.commit();
+    }
+    public String getUploadFlag(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        String upFlag = sp.getString("uploadflag", null);
+        return upFlag;
+    }
+
+    //팀정보 생성
+    public void saveTeam(Team team){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor pre = sp.edit();
+
+        pre.putInt("team_id", team.getTeamid());
+        pre.putString("team_name", team.getName());
+        pre.putString("team_disp", team.getDescription());
+        pre.putString("team_emblem", team.getEmblem());
+        pre.putString("team_creationdate", team.getChange_creationdate());
+        pre.commit();
+    }
+
+    //팀정보가져오기
+    public Team getTeam(){
+        Team team = new Team();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        team.setTeamid(sp.getInt("team_id", 0));
+        team.setName(sp.getString("team_name",null));
+        team.setDescription(sp.getString("team_disp", null));
+        team.setEmblem(sp.getString("team_emblem", null));
+        team.setCreationdate(sp.getString("team_creationdate", null));
+        return team;
     }
 
 }

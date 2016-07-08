@@ -51,4 +51,10 @@
 
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/btnUploadCancel"
+        android:text="업로드 취소하기"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

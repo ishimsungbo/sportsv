@@ -19,6 +19,7 @@ import com.sportsv.R;
 import com.sportsv.WelcomeActivity;
 import com.sportsv.common.PrefManager;
 import com.sportsv.common.PrefUtil;
+import com.sportsv.dbnetwork.UserTRService;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 import com.sportsv.youtubeupload.StartUploadActivity;
@@ -235,6 +236,14 @@ public class TestActivity extends AppCompatActivity {
 
         startActivity(new Intent(this, WelcomeActivity.class));
         finish();
+    }
+
+    @OnClick(R.id.btn_uplaod_user)
+    public void btnup(){
+
+        UserTRService userTRService = new UserTRService(this,user);
+        userTRService.updateUserImage("254","1467950181857.jpg","/storage/emulated/0/SmartWheel/1467950181857.jpg");
+
     }
 
 }

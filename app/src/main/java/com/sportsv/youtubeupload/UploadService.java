@@ -47,6 +47,8 @@ public class UploadService extends IntentService {
 
     private YoutubeUploadVo youtubeUploadVo;
 
+    String videoId = null;
+
     public UploadService() {
         super("UploadService");
     }
@@ -95,8 +97,15 @@ public class UploadService extends IntentService {
 
         Log.d(TAG, "====================업로드 Intent 시작합니다.");
         final YouTube youtube =  new YouTube.Builder(transport, jsonFactory, credential).setApplicationName(appName).build();
-        String videoId = tryUpload(fileUri, youtube);
-        Log.d(TAG, "====================업로드 종료 업로드");
+        //String videoId = tryUpload(fileUri, youtube);
+
+        try {
+            tryUploadAndShowSelectableNotification(fileUri, youtube);
+        } catch (InterruptedException e) {
+            // ignore
+        }
+
+        Log.d(TAG, "====================업로드 종료");
 
     }
 
@@ -109,6 +118,7 @@ public class UploadService extends IntentService {
         final Intent intent = new Intent("uploadReceiver");
         final LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         intent.putExtra("uploadMessage","업로드가 종료 되었습니다");
+        intent.putExtra("upflag",videoId);
 
         /*알림 메세지
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -135,7 +145,6 @@ public class UploadService extends IntentService {
 
         long fileSize;
         InputStream fileInputStream = null;
-        String videoId = null;
         try {
 
             fileSize = getContentResolver().openFileDescriptor(mFileUri, "r").getStatSize();
@@ -148,6 +157,7 @@ public class UploadService extends IntentService {
 
             videoId = ResumableUpload.upload(youtube, fileInputStream, fileSize, mFileUri, cursor.getString(column_index), getApplicationContext(),youtubeUploadVo);
 
+            Log.d(TAG,"업로드 종료 : " + videoId);
 
         } catch (FileNotFoundException e) {
             Log.e(getApplicationContext().toString(), e.getMessage());
@@ -160,6 +170,51 @@ public class UploadService extends IntentService {
         }
         return videoId;
     }
+
+    private static void zzz(int duration) throws InterruptedException {
+        Log.d(TAG, String.format("Sleeping for [%d] ms ...", duration));
+        Thread.sleep(duration);
+        Log.d(TAG, String.format("Sleeping for [%d] ms ... done", duration));
+    }
+
+    private static boolean timeoutExpired(long startTime, int timeoutSeconds) {
+        long currTime = System.currentTimeMillis();
+        long elapsed = currTime - startTime;
+        if (elapsed >= timeoutSeconds * 1000) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    private void tryUploadAndShowSelectableNotification(final Uri fileUri, final YouTube youtube) throws InterruptedException {
+        while (true) {
+            Log.i(TAG, String.format("Uploading [%s] to YouTube", fileUri.toString()));
+
+            String videoId = tryUpload(fileUri, youtube);
+
+            if (videoId != null) {
+
+                Log.i(TAG, String.format("Uploaded video with ID: %s", videoId));
+                //tryShowSelectableNotification(videoId, youtube);
+                return;
+
+            } else {
+                Log.e(TAG, String.format("Failed to upload %s", fileUri.toString()));
+                if (mUploadAttemptCount++ < MAX_RETRY) {
+                    Log.i(TAG, String.format("Will retry to upload the video ([%d] out of [%d] reattempts)",
+                            mUploadAttemptCount, MAX_RETRY));
+                    zzz(UPLOAD_REATTEMPT_DELAY_SEC * 1000);
+                } else {
+                    Log.e(TAG, String.format("Giving up on trying to upload %s after %d attempts",
+                            fileUri.toString(), mUploadAttemptCount));
+                    return;
+                }
+            }
+        }
+    }
+
 
 }
 

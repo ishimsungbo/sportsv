@@ -84,14 +84,19 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".AppJoinActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".InsLoginActivity"
+        <activity
+            android:name=".AppJoinActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".InsJoinActivity"
+        <activity
+            android:name=".InsLoginActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".InsInfoActivity"
+        <activity
+            android:name=".InsJoinActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".InsInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".team.TeamActivity"></activity>
     </application>
 
 </manifest>

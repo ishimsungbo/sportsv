@@ -4,10 +4,14 @@ import com.sportsv.vo.Instructor;
 import com.sportsv.vo.InstructorPointHistory;
 import com.sportsv.vo.ServerResult;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 /**
@@ -27,4 +31,12 @@ public interface InstructorService {
      * ************/
     @GET("/api/ins/getPointHis")
     Call<InstructorPointHistory> getPointHis(@Query("insid") int insid);
+
+    @Multipart
+    @POST("/api/ins/fileupload")
+    Call<ServerResult> fileupload(
+            @Part("instructorid") RequestBody instructorid,
+            @Part("filename") RequestBody filename,
+            @Part("profileimgurl") RequestBody profileimgurl,
+            @Part MultipartBody.Part file);
 }

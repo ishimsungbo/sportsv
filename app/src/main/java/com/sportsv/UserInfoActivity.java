@@ -29,8 +29,8 @@ import com.sportsv.common.PrefUtil;
 import com.sportsv.common.SettingActivity;
 import com.sportsv.dao.PointService;
 import com.sportsv.dbnetwork.PointQueryService;
+import com.sportsv.dbnetwork.UserTRService;
 import com.sportsv.retropit.ServiceGenerator;
-import com.sportsv.serverservice.UserFileUploadService;
 import com.sportsv.vo.CpBalanceHeader;
 import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.SpBalanceHeader;
@@ -263,7 +263,7 @@ public class UserInfoActivity extends AppCompatActivity{
                 final Bundle extras = data.getExtras();
 
                 //크롭된 이미지를 저장하기 위한 file 경로
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel/"+System.currentTimeMillis()+".jpg";
+                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+Common.IMAGE_MOM_PATH+System.currentTimeMillis()+".jpg";
 
                 Log.d(TAG,"파일 경로는 : " + filePath);
 
@@ -340,7 +340,9 @@ public class UserInfoActivity extends AppCompatActivity{
 
     private void storeCropImage(Bitmap bitmap,String filePath){
 
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartWheel/";
+        Log.d(TAG,"이미지 잘라서 저장하기 시작 ============================");
+
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+Common.IMAGE_MOM_PATH;
         File directory_SmartWheel = new File(dirPath);
 
         if(!directory_SmartWheel.exists())
@@ -350,18 +352,6 @@ public class UserInfoActivity extends AppCompatActivity{
         String profileimgurl = Common.SERVER_USER_IMGFILEADRESS + fileName;
         String StrUid = String.valueOf(user.getUid());
 
-        //유저 아이디
-        //확장자를 포함한 파일명
-        //확장자를 포함한 파일의 위치+파일명
-
-        new UserFileUploadService(StrUid,fileName,RealFilePath,user,this).execute();
-
-
-        //유저사진을 쉐어퍼런스에 저장해준다(업데이트)
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor pre = sp.edit();
-        pre.putString("profileImgUrl", profileimgurl);
-        pre.commit();
 
         File copyFile = new File(filePath);
         BufferedOutputStream out = null;
@@ -371,22 +361,35 @@ public class UserInfoActivity extends AppCompatActivity{
             out = new BufferedOutputStream(new FileOutputStream(copyFile));
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
 
-            //sendBrodcast를 통해 Crop된 사진을 앨범에 보이도록 갱신한다
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(copyFile)));
+            Log.d(TAG,"파일 갱신 할 정보는  : " + copyFile);
 
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(copyFile)));
             out.flush();
             out.close();
 
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        //이미지 업로드
+        Log.d(TAG,"User Upload End===================================================================");
+        UserTRService userTRService = new UserTRService(this,user);
+        userTRService.updateUserImage(StrUid,fileName,RealFilePath);
+
+        //유저사진을 쉐어퍼런스에 저장해준다(업데이트)
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor pre = sp.edit();
+        pre.putString("profileImgUrl", profileimgurl);
+        pre.commit();
+        Log.d(TAG,"User Upload End ===================================================================");
+
     }
 
 
     @OnClick(R.id.btn_daily_check)
     public void btn_daily_check(){
 
-        PointService pointService = ServiceGenerator.createService(PointService.class,user);
+        PointService pointService = ServiceGenerator.createService(PointService.class,this,user);
         final Call<ServerResult> call = pointService.daliyCheck(String.valueOf(user.getUid()),"DALIY","KR");
 
         call.enqueue(new Callback<ServerResult>() {
