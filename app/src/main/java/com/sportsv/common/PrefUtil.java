@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.sportsv.vo.Instructor;
-import com.sportsv.vo.Team;
 import com.sportsv.vo.User;
 
 
@@ -38,7 +37,6 @@ public class PrefUtil {
         pre.putString("ins_description",ins.getDescription());
         pre.putString("ins_phone", ins.getPhone());
         pre.putInt("ins_location", ins.getLocation());
-        pre.putInt("ins_teamid", ins.getTeamid());
         pre.putString("ins_feedbackflag",ins.getFeedbackflag());
         pre.putString("appushflag",ins.getApppushflag());
         pre.putString("serialnumber",ins.getSerialnumber());
@@ -62,7 +60,6 @@ public class PrefUtil {
         instructor.setDescription(sp.getString("ins_description",null));
         instructor.setPhone(sp.getString("ins_phone",null));
         instructor.setLocation(sp.getInt("ins_location",0));
-        instructor.setTeamid(sp.getInt("ins_teamid",0));
         instructor.setFeedbackflag(sp.getString("ins_feedbackflag",null));
         instructor.setApppushflag(sp.getString("appushflag",null));
         instructor.setSerialnumber(sp.getString("serialnumber",null));
@@ -88,7 +85,6 @@ public class PrefUtil {
         pre.putString("snstype", user.getSnstype());
         pre.putString("snsid", user.getSnsid());
         pre.putInt("location", user.getLocation());
-        pre.putInt("teamid", user.getTeamid());
         pre.putString("gmail", user.getGoogleemail());
         pre.putString("teampushflag", user.getTeampushflag());
         pre.putString("apppushflag", user.getApppushflag());
@@ -115,7 +111,6 @@ public class PrefUtil {
         user.setGoogleemail(sp.getString("gmail", null));
         user.setTeampushflag(sp.getString("teampushflag", null));
         user.setApppushflag(sp.getString("apppushflag", null));
-        user.setTeamid(sp.getInt("teamid", 0));
         user.setPassword(sp.getString("password", null));
         user.setCommontokenid(sp.getInt("commontokenid", 0));
         return user;
@@ -144,33 +139,6 @@ public class PrefUtil {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
         String upFlag = sp.getString("uploadflag", null);
         return upFlag;
-    }
-
-    //팀정보 생성
-    public void saveTeam(Team team){
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor pre = sp.edit();
-
-        pre.putInt("team_id", team.getTeamid());
-        pre.putString("team_name", team.getName());
-        pre.putString("team_disp", team.getDescription());
-        pre.putString("team_emblem", team.getEmblem());
-        pre.putString("team_creationdate", team.getChange_creationdate());
-        pre.commit();
-    }
-
-    //팀정보가져오기
-    public Team getTeam(){
-        Team team = new Team();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
-
-        team.setTeamid(sp.getInt("team_id", 0));
-        team.setName(sp.getString("team_name",null));
-        team.setDescription(sp.getString("team_disp", null));
-        team.setEmblem(sp.getString("team_emblem", null));
-        team.setCreationdate(sp.getString("team_creationdate", null));
-        return team;
     }
 
 }

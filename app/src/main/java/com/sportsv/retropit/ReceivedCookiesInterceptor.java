@@ -15,7 +15,6 @@ import okhttp3.Response;
  * * 쿠키 인터셉터
  */
 public class ReceivedCookiesInterceptor implements Interceptor{
-
     private static final String TAG = "ReceivedCookiesIt";
     private DalgonaSharedPreferences mDsp;
 
@@ -31,22 +30,20 @@ public class ReceivedCookiesInterceptor implements Interceptor{
         try {
 
             if (!response.header("Set-Cookie").isEmpty()) {
-                HashSet<String> cookies = new HashSet<>();
 
-                Log.d("추가한 쿠키값은 : ", " 쿠키값을 가져옵니다");
+                HashSet<String> cookies = new HashSet<>();
 
                 for (String header : response.headers("Set-Cookie")) {
                     cookies.add(header);
-                    Log.d("추가한 쿠키값은 : ", " 쿠키값 : " + header);
                 }
 
                 mDsp.putHashSet(DalgonaSharedPreferences.KEY_COOKIE, cookies);
             }
         }catch (Exception e){
             Log.d(TAG," : 쿠키 값을 이미 받았습니다 : "+e.getMessage());
-            //e.printStackTrace();
         }
 
         return response;
     }
+
 }

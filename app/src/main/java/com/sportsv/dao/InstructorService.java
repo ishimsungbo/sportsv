@@ -4,6 +4,8 @@ import com.sportsv.vo.Instructor;
 import com.sportsv.vo.InstructorPointHistory;
 import com.sportsv.vo.ServerResult;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -39,4 +41,7 @@ public interface InstructorService {
             @Part("filename") RequestBody filename,
             @Part("profileimgurl") RequestBody profileimgurl,
             @Part MultipartBody.Part file);
+
+    @GET("/all/team/getInstructorList")
+    Call<List<Instructor>> getInstructorList();
 }

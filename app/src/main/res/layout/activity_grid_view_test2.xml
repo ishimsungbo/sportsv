@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.sportsv.test.GridViewTest2">
+
+    <!--
+    android:columnWidth="90dip"각 컬럼(항목) 하나의 폭
+    android:numColumns="auto_fit"
+    열의 개수 - 상수(숫자)로 지정할 수 있으며, 여기서 정한
+    'auto_fit" 이란 열의폭과 화면폭을 적당히 계산해 자동으로 정해주는 것 입니다.
+    android:verticalSpacing="10dp" 행(rows) 사이의 간격
+    android:horizontalSpacing="10dp" 열(columns) 사이의 간격
+    android:stretchMode="columnWidth"
+    열(columns) 내부의 여백 존재 시 처리여부. 'columnWidth' 란 폭에 맞게 가득 채우는 것을 의미합니다.
+    android:gravity="center" 각 cell의 정렬방식
+    -->
+
+    <GridView
+        android:id="@+id/gridView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnWidth="120dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        />
+
+
+</LinearLayout>

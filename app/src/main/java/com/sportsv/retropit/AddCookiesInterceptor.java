@@ -27,6 +27,7 @@ public class AddCookiesInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request.Builder builder = chain.request().newBuilder();
         HashSet<String> preferences = (HashSet) mDsp.getHashSet(DalgonaSharedPreferences.KEY_COOKIE, new HashSet<String>());
+
         for (String cookie : preferences) {
             builder.addHeader("Cookie", cookie);
             Log.v("추가한 쿠키값은 ==== : ", "Adding Header: ================  " + cookie);

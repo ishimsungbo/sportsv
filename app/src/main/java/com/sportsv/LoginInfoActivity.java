@@ -155,7 +155,6 @@ public class LoginInfoActivity extends AppCompatActivity {
         userVo.setPassword(snsid);
         userVo.setTeampushflag("Y");
         userVo.setApppushflag("Y");
-        userVo.setTeamid(0);
         userVo.setSerialnumber(Common.getDeviceSerialNumber());
         userVo.setFcmToken(FirebaseInstanceId.getInstance().getToken());
     }

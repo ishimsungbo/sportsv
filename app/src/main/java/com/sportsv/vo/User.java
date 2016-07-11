@@ -16,7 +16,6 @@ public class User {
 	private int location;
 	private String apppushflag;
 	private String teampushflag;
-	private int teamid;
 	private int commontokenid;
 	private String serialnumber;
 	private String creationdate;
@@ -33,7 +32,7 @@ public class User {
 		this.useremail = useremail;
 	}
 
-	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int teamid, int commontokenid, String serialnumber, String creationdate, String change_creationdate, String fcmToken) {
+	public User(int uid, String useremail, String username, String snsid, String snsname, String snstype, String phone, String password, String profileimgurl, String googleemail, int location, String apppushflag, String teampushflag, int commontokenid, String serialnumber, String creationdate, String change_creationdate, String fcmToken) {
 		this.uid = uid;
 		this.useremail = useremail;
 		this.username = username;
@@ -47,7 +46,6 @@ public class User {
 		this.location = location;
 		this.apppushflag = apppushflag;
 		this.teampushflag = teampushflag;
-		this.teamid = teamid;
 		this.commontokenid = commontokenid;
 		this.serialnumber = serialnumber;
 		this.creationdate = creationdate;
@@ -167,15 +165,6 @@ public class User {
 		this.teampushflag = teampushflag;
 	}
 
-	public int getTeamid() {
-		return teamid;
-	}
-
-	public void setTeamid(int teamid) {
-		this.teamid = teamid;
-	}
-
-
 	public String getCreationdate() {
 		return creationdate;
 	}
@@ -224,7 +213,6 @@ public class User {
 				", location=" + location +
 				", apppushflag='" + apppushflag + '\'' +
 				", teampushflag='" + teampushflag + '\'' +
-				", teamid=" + teamid +
 				", commontokenid=" + commontokenid +
 				", serialnumber='" + serialnumber + '\'' +
 				", creationdate='" + creationdate + '\'' +

@@ -96,7 +96,14 @@
         <activity
             android:name=".InsInfoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".team.TeamActivity"></activity>
+        <activity android:name=".team.TeamActivity" />
+        <activity
+            android:name=".viewpage.ViewPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".test.GridViewTest" />
+        <activity android:name=".test.GridViewTest2" />
+        <activity android:name=".team.TeamManageActivity"></activity>
     </application>
 
 </manifest>

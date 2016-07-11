@@ -14,12 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.sportsv.R;
 import com.sportsv.WelcomeActivity;
 import com.sportsv.common.PrefManager;
 import com.sportsv.common.PrefUtil;
 import com.sportsv.dbnetwork.UserTRService;
+import com.sportsv.viewpage.ViewPage;
 import com.sportsv.vo.User;
 import com.sportsv.widget.VeteranToast;
 import com.sportsv.youtubeupload.StartUploadActivity;
@@ -180,10 +182,6 @@ public class TestActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.btnupdate)
-    public void btnupdate(){
-        VeteranToast.makeToast(getApplicationContext(),"유저미션 생성",0).show();
-    }
 
     @OnClick(R.id.btn_webview)
     public void btn_webview(){
@@ -240,10 +238,28 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_uplaod_user)
     public void btnup(){
-
         UserTRService userTRService = new UserTRService(this,user);
         userTRService.updateUserImage("254","1467950181857.jpg","/storage/emulated/0/SmartWheel/1467950181857.jpg");
+    }
 
+    @OnClick(R.id.btn_viewPage_test)
+    public void viewPageTest(){
+        Intent intent = new Intent(this, ViewPage.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_gridview)
+    public void btn_gridview(){
+        VeteranToast.makeToast(getApplicationContext(),"그리드 레이아웃 사용예제", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, GridViewTest.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_gridview1)
+    public void btn_gridview1(){
+        VeteranToast.makeToast(getApplicationContext(),"그리드 레이아웃 사용예제", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, GridViewTest2.class);
+        startActivity(intent);
     }
 
 }

@@ -11,6 +11,8 @@ import com.sportsv.vo.CpBalanceHeader;
 import com.sportsv.vo.SpBalanceHeader;
 import com.sportsv.vo.User;
 
+import java.text.NumberFormat;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +30,7 @@ public class PointQueryService {
     private CpBalanceHeader cpBalanceHeader;
     private TextView    textView;
     private User user;
+    private NumberFormat numberFormat = NumberFormat.getInstance();
 
     //셀프포인트를 가져올때
     public PointQueryService(String TAG, Context context, SpBalanceHeader spBalanceHeader, TextView textView, User user) {
@@ -67,12 +70,10 @@ public class PointQueryService {
                 try {
 
                     Log.d(TAG, "서버에서 셀프 포인트 정보를 가져옵니다");
-
                     spBalanceHeader = response.body();
 
                     String self_point = String.valueOf(spBalanceHeader.getAmount());
-
-                    textView.setText(self_point);
+                    textView.setText(numberFormat.format(Integer.valueOf(self_point)));
 
                     Log.d(TAG,"셀프 포인트 값은 : " + spBalanceHeader.getAmount() );
                     dialog.dismiss();
@@ -93,7 +94,7 @@ public class PointQueryService {
         });
     }
 
-    //셀프포인트
+    //현금포인트
     public void getCashPoint(){
 
         final ProgressDialog dialog;
@@ -117,7 +118,8 @@ public class PointQueryService {
 
                     String self_point = String.valueOf(cpBalanceHeader.getAmount());
 
-                    textView.setText(self_point);
+                    textView.setText(numberFormat.format(Integer.valueOf(self_point)));
+
                     Log.d(TAG,"캐쉬 포인트 값은 : " + cpBalanceHeader.getAmount() );
                     dialog.dismiss();
                 } catch (Exception e) {

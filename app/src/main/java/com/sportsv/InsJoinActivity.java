@@ -147,7 +147,6 @@ public class InsJoinActivity extends AppCompatActivity {
         instructor.setDescription("강사설명");
         instructor.setPhone(phoneNumber);
         instructor.setLocation(0);
-        instructor.setTeamid(0);
         instructor.setFeedbackflag("Y");
         instructor.setApppushflag("Y");
         instructor.setPointhistoryid(0);

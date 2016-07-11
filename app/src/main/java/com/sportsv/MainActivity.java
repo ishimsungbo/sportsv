@@ -69,11 +69,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate ===========================================================");
         FirebaseMessaging.getInstance().subscribeToTopic("news");
 
-
         getAppKeyHash();
         Log.d(TAG,"해쉬키는 : " + hasykey);
-
-
     }
 
     @OnClick(R.id.btn_move)

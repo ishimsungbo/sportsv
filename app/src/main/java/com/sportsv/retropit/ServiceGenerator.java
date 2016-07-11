@@ -77,6 +77,7 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
+
     //회원 및 인증이 필요한 일반 유저용
     public static <S> S createService(Class<S> serviceClass, Context context, User user) {
 
@@ -120,11 +121,18 @@ public class ServiceGenerator {
 
         }
 
-        AddCookiesInterceptor addCookiesInterceptor = new AddCookiesInterceptor(context);
-        ReceivedCookiesInterceptor receivedCookiesInterceptor = new ReceivedCookiesInterceptor(context);
+        if(!Common.NETWORK_COOKIE){
 
-        httpClient.addNetworkInterceptor(addCookiesInterceptor);
-        httpClient.addInterceptor(receivedCookiesInterceptor);
+            Log.d(TAG,"쿠키값은 : " + Common.NETWORK_COOKIE);
+
+            ReceivedCookiesInterceptor receivedCookiesInterceptor = new ReceivedCookiesInterceptor(context);
+            httpClient.addInterceptor(receivedCookiesInterceptor);
+
+            AddCookiesInterceptor addCookiesInterceptor = new AddCookiesInterceptor(context);
+            httpClient.addNetworkInterceptor(addCookiesInterceptor);
+
+            Common.NETWORK_COOKIE = true;
+        }
 
         /*****************************************************************************
          HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -194,11 +202,18 @@ public class ServiceGenerator {
             }
         });
 
-        AddCookiesInterceptor addCookiesInterceptor = new AddCookiesInterceptor(context);
-        ReceivedCookiesInterceptor receivedCookiesInterceptor = new ReceivedCookiesInterceptor(context);
+        if(!Common.NETWORK_COOKIE){
 
-        httpClient.addNetworkInterceptor(addCookiesInterceptor);
-        httpClient.addInterceptor(receivedCookiesInterceptor);
+            Log.d(TAG,"쿠키값은 : " + Common.NETWORK_COOKIE);
+
+            ReceivedCookiesInterceptor receivedCookiesInterceptor = new ReceivedCookiesInterceptor(context);
+            httpClient.addInterceptor(receivedCookiesInterceptor);
+
+            AddCookiesInterceptor addCookiesInterceptor = new AddCookiesInterceptor(context);
+            httpClient.addNetworkInterceptor(addCookiesInterceptor);
+
+            Common.NETWORK_COOKIE = true;
+        }
 
         /*****************************************************************************
          HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();

@@ -31,6 +31,7 @@ import com.sportsv.dao.PointService;
 import com.sportsv.dbnetwork.PointQueryService;
 import com.sportsv.dbnetwork.UserTRService;
 import com.sportsv.retropit.ServiceGenerator;
+import com.sportsv.team.TeamManageActivity;
 import com.sportsv.vo.CpBalanceHeader;
 import com.sportsv.vo.ServerResult;
 import com.sportsv.vo.SpBalanceHeader;
@@ -421,4 +422,11 @@ public class UserInfoActivity extends AppCompatActivity{
             }
         });
     }
+
+    @OnClick(R.id.btn_TeamManage)
+    public void btn_TeamManage(){
+        Intent intent = new Intent(this, TeamManageActivity.class);
+        startActivity(intent);
+    }
+
 }

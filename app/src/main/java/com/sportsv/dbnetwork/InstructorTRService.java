@@ -3,6 +3,7 @@ package com.sportsv.dbnetwork;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.util.Log;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.sportsv.common.Common;
@@ -31,6 +32,7 @@ public class InstructorTRService {
     private Activity activity;
     private Instructor instructor;
     private String profileimgurl; //강사 사진 풀 주소
+    private GridView mGridView;
 
     public InstructorTRService(Activity activity, Instructor instructor) {
         this.activity = activity;

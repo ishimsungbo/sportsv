@@ -12,6 +12,8 @@ public class Common {
     public static String SERVER_TEAM_IMGFILEADRESS = SERVER_ADRESS + "/resources/teamimg/";
     public static String VETERAN_SNSID = "999999999999999";
 
+    public static Boolean NETWORK_COOKIE = false;
+
     public static String IMAGE_MOM_PATH = "/MomSoccerImage/";
 
     public static boolean upflag;
@@ -31,4 +33,5 @@ public class Common {
     public static void setUpflag(boolean upflag) {
         Common.upflag = upflag;
     }
+
 }

@@ -95,7 +95,6 @@ public class TeamTRService {
                     Log.d(TAG,"서버에서 생성된 팀정보 : "+resultTeam.toString());
 
                     prefUtil = new PrefUtil(activity);
-                    prefUtil.saveTeam(resultTeam);
                     dialog.dismiss();
                     VeteranToast.makeToast(activity,"팀이 생성 되었습니다", Toast.LENGTH_SHORT).show();
 

@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.sportsv.InsInfoActivity;
 import com.sportsv.R;
 import com.sportsv.common.Common;
@@ -43,7 +42,6 @@ public class TeamActivity extends AppCompatActivity {
 
     private PrefUtil prefUtil;
     private Instructor instructor;
-    private Team team;
 
     TextInputLayout layout_teamName;
     TextInputLayout layout_teamDisp;
@@ -68,7 +66,6 @@ public class TeamActivity extends AppCompatActivity {
     private String fileName;
     private String TEAMTRFLAG = "NEW";
 
-    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +78,9 @@ public class TeamActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         prefUtil = new PrefUtil(this);
         instructor = prefUtil.getIns();
-        team = prefUtil.getTeam();
 
         layout_teamName = (TextInputLayout) findViewById(R.id.layout_teamName);
         layout_teamDisp = (TextInputLayout) findViewById(R.id.layout_teamDisp);
-
-        Log.d(TAG,"팀 정보 : " + team.toString());
-
-        if(!Compare.isEmpty(team.getEmblem())) {
-            Glide.with(this)
-                    .load(team.getEmblem())
-                    .into(im_teamImage);
-        }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(createTeam, new IntentFilter("createTeam"));
 

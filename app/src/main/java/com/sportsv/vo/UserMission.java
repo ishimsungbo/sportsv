@@ -1,8 +1,5 @@
 package com.sportsv.vo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class UserMission {
 
 	private int usermissionid;
@@ -15,12 +12,14 @@ public class UserMission {
 	private String passflag;
 	private String videoaddr;
 	private String filename;
+	private int grade;          //미션업로드점수
+	private int passgrade;      //미션클리어점수
 	private String creationdate;
 	private String change_creationdate;
 
 	public UserMission(){}
 
-	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, String filename, String creationdate, String change_creationdate) {
+	public UserMission(int usermissionid, int missionid, int uid, String subject, String descroption, String uploadflag, String youtubeaddr, String passflag, String videoaddr, String filename, int grade, int passgrade, String creationdate, String change_creationdate) {
 		this.usermissionid = usermissionid;
 		this.missionid = missionid;
 		this.uid = uid;
@@ -31,6 +30,8 @@ public class UserMission {
 		this.passflag = passflag;
 		this.videoaddr = videoaddr;
 		this.filename = filename;
+		this.grade = grade;
+		this.passgrade = passgrade;
 		this.creationdate = creationdate;
 		this.change_creationdate = change_creationdate;
 	}
@@ -131,6 +132,22 @@ public class UserMission {
 		this.change_creationdate = change_creationdate;
 	}
 
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
+	public int getPassgrade() {
+		return passgrade;
+	}
+
+	public void setPassgrade(int passgrade) {
+		this.passgrade = passgrade;
+	}
+
 	@Override
 	public String toString() {
 		return "UserMission{" +
@@ -144,6 +161,8 @@ public class UserMission {
 				", passflag='" + passflag + '\'' +
 				", videoaddr='" + videoaddr + '\'' +
 				", filename='" + filename + '\'' +
+				", grade=" + grade +
+				", passgrade=" + passgrade +
 				", creationdate='" + creationdate + '\'' +
 				", change_creationdate='" + change_creationdate + '\'' +
 				'}';

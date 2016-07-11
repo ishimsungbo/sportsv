@@ -14,7 +14,6 @@ public class Instructor {
     private String description;
     private String phone;
     private int location;
-    private int teamid;
     private int pointhistoryid;
     private String feedbackflag;
     private String apppushflag;
@@ -26,7 +25,7 @@ public class Instructor {
 
     public Instructor(){}
 
-    public Instructor(int instructorid, String email, String password, String name, String profileimgurl, String profile, String description, String phone, int location, int teamid, int pointhistoryid, String feedbackflag, String apppushflag, int commontokenid, String serialnumber, String fcmtoken, String creationdate, String change_creationdate) {
+    public Instructor(int instructorid, String email, String password, String name, String profileimgurl, String profile, String description, String phone, int location, int pointhistoryid, String feedbackflag, String apppushflag, int commontokenid, String serialnumber, String fcmtoken, String creationdate, String change_creationdate) {
         this.instructorid = instructorid;
         this.email = email;
         this.password = password;
@@ -36,7 +35,6 @@ public class Instructor {
         this.description = description;
         this.phone = phone;
         this.location = location;
-        this.teamid = teamid;
         this.pointhistoryid = pointhistoryid;
         this.feedbackflag = feedbackflag;
         this.apppushflag = apppushflag;
@@ -119,14 +117,6 @@ public class Instructor {
         this.location = location;
     }
 
-    public int getTeamid() {
-        return teamid;
-    }
-
-    public void setTeamid(int teamid) {
-        this.teamid = teamid;
-    }
-
     public int getPointhistoryid() {
         return pointhistoryid;
     }
@@ -203,7 +193,6 @@ public class Instructor {
                 ", description='" + description + '\'' +
                 ", phone='" + phone + '\'' +
                 ", location=" + location +
-                ", teamid=" + teamid +
                 ", pointhistoryid=" + pointhistoryid +
                 ", feedbackflag='" + feedbackflag + '\'' +
                 ", apppushflag='" + apppushflag + '\'' +
